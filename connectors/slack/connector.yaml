@@ -1,0 +1,126 @@
+# Spark Connector Spec — Slack
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: slack
+  name: "Slack"
+  version: "2.4.1"
+  publisher: "Spark Official"
+  category: "Communication"
+  tags: ["Messaging", "Teams", "Enterprise"]
+  icon: forum
+  description: >
+    Real-time messaging for teams. Enable agents to read channels,
+    post notifications, and interact with threads.
+  longDescription: >
+    The Slack connector provides comprehensive integration with Slack
+    workspaces, enabling Spark agents to read messages, post notifications,
+    manage channels, and interact with threads. Built for enterprise-grade
+    reliability with support for OAuth2 and bot tokens.
+  license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
+
+spec:
+  docker:
+    image: spark/connector-slack
+    tag: "2.4.1"
+    ports:
+      grpc: 50061
+
+  auth:
+    type: oauth2
+    description: "Slack OAuth2 with bot and app tokens"
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: true
+    supports_edit: true
+    supports_unsend: true
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4000
+    max_attachment_bytes: 1073741824
+    supported_media_types: ["image/png", "image/jpeg", "image/gif", "application/pdf"]
+
+  config:
+    - name: bot_token
+      display: "Bot Token"
+      type: secret
+      required: true
+      description: "Slack bot OAuth token (xoxb-...)"
+
+    - name: app_token
+      display: "App Token"
+      type: secret
+      required: false
+      description: "Slack app-level token for Socket Mode (xapp-...)"
+
+    - name: signing_secret
+      display: "Signing Secret"
+      type: secret
+      required: true
+      description: "Slack app signing secret for request verification"
+
+  tools:
+    - name: slack-send-message
+      method: POST
+      description: "Send a message to a channel or DM"
+      args:
+        - name: channel
+          type: string
+          description: "Channel ID or name"
+          required: true
+        - name: text
+          type: string
+          description: "Message content (mrkdwn format)"
+          required: true
+
+    - name: slack-list-channels
+      method: GET
+      description: "List all channels in the workspace"
+      args:
+        - name: limit
+          type: number
+          description: "Max channels to return (default 100)"
+          required: false
+          default: "100"
+
+    - name: slack-read-channel
+      method: GET
+      description: "Read recent messages from a channel"
+      args:
+        - name: channel
+          type: string
+          description: "Channel ID"
+          required: true
+        - name: limit
+          type: number
+          description: "Number of messages to fetch"
+          required: false
+          default: "50"
+
+  versions:
+    - version: "2.4.1"
+      date: "2026-03-15"
+      changes:
+        - "Improved Socket Mode reconnection"
+        - "Added message chunking for long responses"
+        - "Fixed thread timestamp handling"
+
+    - version: "2.4.0"
+      date: "2026-02-01"
+      changes:
+        - "Added reaction support"
+        - "Added message edit/delete support"
+        - "Performance improvements for large workspaces"
+
+  setup: |
+    1. Create a Slack App at https://api.slack.com/apps
+    2. Enable Socket Mode in your app settings
+    3. Add required bot scopes: channels:read, channels:history,
+       chat:write, reactions:read, reactions:write
+    4. Install the app to your workspace
+    5. Copy the Bot Token (xoxb-...) and App Token (xapp-...)
+    6. Enter them in the connector configuration
