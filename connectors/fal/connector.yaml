@@ -1,0 +1,46 @@
+# Spark Connector Spec — fal
+# Auto-generated from OpenClaw extension: fal
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: fal
+  name: "fal"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: image
+  description: >
+    OpenClaw fal provider plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/fal"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-fal
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: default_fal_base_url
+      display: "DEFAULT_FAL_BASE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_FAL_BASE_URL"
+    - name: fal_key
+      display: "FAL_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: FAL_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

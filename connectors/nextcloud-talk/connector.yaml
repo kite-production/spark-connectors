@@ -1,0 +1,76 @@
+# Spark Connector Spec — nextcloud talk
+# Auto-generated from OpenClaw extension: nextcloud-talk
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: nextcloud-talk
+  name: "nextcloud talk"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: cloud
+  description: >
+    OpenClaw Nextcloud Talk channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/nextcloud-talk"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-nextcloud-talk
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: configure_api
+      display: "CONFIGURE_API"
+      type: text
+      required: true
+      description: "Environment variable: CONFIGURE_API"
+    - name: default_webhook_port
+      display: "DEFAULT_WEBHOOK_PORT"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_WEBHOOK_PORT"
+    - name: nextcloud_talk_api
+      display: "NEXTCLOUD_TALK_API"
+      type: text
+      required: true
+      description: "Environment variable: NEXTCLOUD_TALK_API"
+    - name: nextcloud_talk_bot_secret
+      display: "NEXTCLOUD_TALK_BOT_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: NEXTCLOUD_TALK_BOT_SECRET"
+    - name: nextcloud_talk_main_api
+      display: "NEXTCLOUD_TALK_MAIN_API"
+      type: text
+      required: true
+      description: "Environment variable: NEXTCLOUD_TALK_MAIN_API"
+    - name: nextcloud_talk_main_bot_secret
+      display: "NEXTCLOUD_TALK_MAIN_BOT_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: NEXTCLOUD_TALK_MAIN_BOT_SECRET"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

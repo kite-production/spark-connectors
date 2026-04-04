@@ -1,0 +1,41 @@
+# Spark Connector Spec — tavily
+# Auto-generated from OpenClaw extension: tavily
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: tavily
+  name: "tavily"
+  type: search
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Search"
+  tags: ["usearch"]
+  icon: search
+  description: >
+    OpenClaw Tavily plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/tavily"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-tavily
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: webSearch
+      display: "webSearch"
+      type: text
+      required: false
+      description: "webSearch"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

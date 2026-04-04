@@ -1,0 +1,66 @@
+# Spark Connector Spec — synology chat
+# Auto-generated from OpenClaw extension: synology-chat
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: synology-chat
+  name: "synology chat"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: storage
+  description: >
+    Synology Chat channel plugin for OpenClaw
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/synology-chat"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-synology-chat
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: invalid_token
+      display: "INVALID_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: INVALID_TOKEN"
+    - name: invalid_token_max_tracked_key
+      display: "INVALID_TOKEN_MAX_TRACKED_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: INVALID_TOKEN_MAX_TRACKED_KEY"
+    - name: synology_chat_incoming_url
+      display: "SYNOLOGY_CHAT_INCOMING_URL"
+      type: text
+      required: true
+      description: "Environment variable: SYNOLOGY_CHAT_INCOMING_URL"
+    - name: synology_chat_token
+      display: "SYNOLOGY_CHAT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SYNOLOGY_CHAT_TOKEN"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

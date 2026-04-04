@@ -1,0 +1,56 @@
+# Spark Connector Spec — imessage
+# Auto-generated from OpenClaw extension: imessage
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: imessage
+  name: "imessage"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: message
+  description: >
+    OpenClaw iMessage channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/imessage"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-imessage
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: imessage_conversation_bindings_state_key
+      display: "IMESSAGE_CONVERSATION_BINDINGS_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: IMESSAGE_CONVERSATION_BINDINGS_STATE_KEY"
+    - name: imessage_legacy_outbound_send_dep_key
+      display: "IMESSAGE_LEGACY_OUTBOUND_SEND_DEP_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: IMESSAGE_LEGACY_OUTBOUND_SEND_DEP_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

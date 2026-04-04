@@ -1,0 +1,71 @@
+# Spark Connector Spec — mattermost
+# Auto-generated from OpenClaw extension: mattermost
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: mattermost
+  name: "mattermost"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: forum
+  description: >
+    OpenClaw Mattermost channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/mattermost"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-mattermost
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: mattermost_bot_token
+      display: "MATTERMOST_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: MATTERMOST_BOT_TOKEN"
+    - name: mattermost_model_picker_context_key
+      display: "MATTERMOST_MODEL_PICKER_CONTEXT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MATTERMOST_MODEL_PICKER_CONTEXT_KEY"
+    - name: mattermost_url
+      display: "MATTERMOST_URL"
+      type: text
+      required: true
+      description: "Environment variable: MATTERMOST_URL"
+    - name: openclaw_gateway_port
+      display: "OPENCLAW_GATEWAY_PORT"
+      type: text
+      required: true
+      description: "Environment variable: OPENCLAW_GATEWAY_PORT"
+    - name: signed_channel_id_context_key
+      display: "SIGNED_CHANNEL_ID_CONTEXT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: SIGNED_CHANNEL_ID_CONTEXT_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

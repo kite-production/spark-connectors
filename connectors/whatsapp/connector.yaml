@@ -1,0 +1,91 @@
+# Spark Connector Spec — whatsapp
+# Auto-generated from OpenClaw extension: whatsapp
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: whatsapp
+  name: "whatsapp"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: chat
+  description: >
+    OpenClaw WhatsApp channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/whatsapp"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-whatsapp
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: allowed_vcard_key
+      display: "ALLOWED_VCARD_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: ALLOWED_VCARD_KEY"
+    - name: config_key
+      display: "CONFIG_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: CONFIG_KEY"
+    - name: default_main_key
+      display: "DEFAULT_MAIN_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DEFAULT_MAIN_KEY"
+    - name: heartbeat_token
+      display: "HEARTBEAT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: HEARTBEAT_TOKEN"
+    - name: message_content_key
+      display: "MESSAGE_CONTENT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MESSAGE_CONTENT_KEY"
+    - name: message_wrapper_key
+      display: "MESSAGE_WRAPPER_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MESSAGE_WRAPPER_KEY"
+    - name: silent_reply_token
+      display: "SILENT_REPLY_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SILENT_REPLY_TOKEN"
+    - name: whatsapp_active_listener_state_key
+      display: "WHATSAPP_ACTIVE_LISTENER_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: WHATSAPP_ACTIVE_LISTENER_STATE_KEY"
+    - name: whatsapp_legacy_outbound_send_dep_key
+      display: "WHATSAPP_LEGACY_OUTBOUND_SEND_DEP_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: WHATSAPP_LEGACY_OUTBOUND_SEND_DEP_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

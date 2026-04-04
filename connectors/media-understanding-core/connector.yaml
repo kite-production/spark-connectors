@@ -1,0 +1,37 @@
+# Spark Connector Spec — media understanding core
+# Auto-generated from OpenClaw extension: media-understanding-core
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: media-understanding-core
+  name: "media understanding core"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: extension
+  description: >
+    OpenClaw media understanding runtime package
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/media-understanding-core"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-media-understanding-core
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: none
+
+  config:
+    []
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

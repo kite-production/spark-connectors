@@ -1,0 +1,196 @@
+# Spark Connector Spec — voice call
+# Auto-generated from OpenClaw extension: voice-call
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: voice-call
+  name: "voice call"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: call
+  description: >
+    OpenClaw voice-call plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/voice-call"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-voice-call
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: enabled
+      display: "enabled"
+      type: text
+      required: false
+      description: "enabled"
+    - name: provider
+      display: "provider"
+      type: text
+      required: false
+      description: "provider"
+    - name: telnyx
+      display: "telnyx"
+      type: text
+      required: false
+      description: "telnyx"
+    - name: twilio
+      display: "twilio"
+      type: text
+      required: false
+      description: "twilio"
+    - name: plivo
+      display: "plivo"
+      type: text
+      required: false
+      description: "plivo"
+    - name: fromNumber
+      display: "fromNumber"
+      type: text
+      required: false
+      description: "fromNumber"
+    - name: toNumber
+      display: "toNumber"
+      type: text
+      required: false
+      description: "toNumber"
+    - name: inboundPolicy
+      display: "inboundPolicy"
+      type: text
+      required: false
+      description: "inboundPolicy"
+    - name: allowFrom
+      display: "allowFrom"
+      type: text
+      required: false
+      description: "allowFrom"
+    - name: inboundGreeting
+      display: "inboundGreeting"
+      type: text
+      required: false
+      description: "inboundGreeting"
+    - name: outbound
+      display: "outbound"
+      type: text
+      required: false
+      description: "outbound"
+    - name: maxDurationSeconds
+      display: "maxDurationSeconds"
+      type: text
+      required: false
+      description: "maxDurationSeconds"
+    - name: staleCallReaperSeconds
+      display: "staleCallReaperSeconds"
+      type: text
+      required: false
+      description: "staleCallReaperSeconds"
+    - name: silenceTimeoutMs
+      display: "silenceTimeoutMs"
+      type: text
+      required: false
+      description: "silenceTimeoutMs"
+    - name: transcriptTimeoutMs
+      display: "transcriptTimeoutMs"
+      type: text
+      required: false
+      description: "transcriptTimeoutMs"
+    - name: ringTimeoutMs
+      display: "ringTimeoutMs"
+      type: text
+      required: false
+      description: "ringTimeoutMs"
+    - name: maxConcurrentCalls
+      display: "maxConcurrentCalls"
+      type: text
+      required: false
+      description: "maxConcurrentCalls"
+    - name: serve
+      display: "serve"
+      type: text
+      required: false
+      description: "serve"
+    - name: tailscale
+      display: "tailscale"
+      type: text
+      required: false
+      description: "tailscale"
+    - name: tunnel
+      display: "tunnel"
+      type: text
+      required: false
+      description: "tunnel"
+    - name: webhookSecurity
+      display: "webhookSecurity"
+      type: text
+      required: false
+      description: "webhookSecurity"
+    - name: streaming
+      display: "streaming"
+      type: text
+      required: false
+      description: "streaming"
+    - name: realtime
+      display: "realtime"
+      type: text
+      required: false
+      description: "realtime"
+    - name: publicUrl
+      display: "publicUrl"
+      type: text
+      required: false
+      description: "publicUrl"
+    - name: skipSignatureVerification
+      display: "skipSignatureVerification"
+      type: text
+      required: false
+      description: "skipSignatureVerification"
+    - name: tts
+      display: "tts"
+      type: text
+      required: false
+      description: "tts"
+    - name: store
+      display: "store"
+      type: text
+      required: false
+      description: "store"
+    - name: responseModel
+      display: "responseModel"
+      type: text
+      required: false
+      description: "responseModel"
+    - name: responseSystemPrompt
+      display: "responseSystemPrompt"
+      type: text
+      required: false
+      description: "responseSystemPrompt"
+    - name: responseTimeoutMs
+      display: "responseTimeoutMs"
+      type: text
+      required: false
+      description: "responseTimeoutMs"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

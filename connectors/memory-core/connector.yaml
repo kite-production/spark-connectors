@@ -1,0 +1,41 @@
+# Spark Connector Spec — memory core
+# Auto-generated from OpenClaw extension: memory-core
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: memory-core
+  name: "memory core"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: extension
+  description: >
+    OpenClaw core memory search plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/memory-core"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-memory-core
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: dreaming
+      display: "dreaming"
+      type: text
+      required: false
+      description: "dreaming"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

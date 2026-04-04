@@ -1,0 +1,131 @@
+# Spark Connector Spec — qquot
+# Auto-generated from OpenClaw extension: qqbot
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: qqbot
+  name: "qquot"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: smart_toy
+  description: >
+    OpenClaw QQ Bot channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/qqbot"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-qqbot
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: enabled
+      display: "enabled"
+      type: text
+      required: false
+      description: "enabled"
+    - name: name
+      display: "name"
+      type: text
+      required: false
+      description: "name"
+    - name: appId
+      display: "appId"
+      type: text
+      required: false
+      description: "appId"
+    - name: clientSecret
+      display: "clientSecret"
+      type: text
+      required: false
+      description: "clientSecret"
+    - name: clientSecretFile
+      display: "clientSecretFile"
+      type: text
+      required: false
+      description: "clientSecretFile"
+    - name: allowFrom
+      display: "allowFrom"
+      type: text
+      required: false
+      description: "allowFrom"
+    - name: systemPrompt
+      display: "systemPrompt"
+      type: text
+      required: false
+      description: "systemPrompt"
+    - name: markdownSupport
+      display: "markdownSupport"
+      type: text
+      required: false
+      description: "markdownSupport"
+    - name: voiceDirectUploadFormats
+      display: "voiceDirectUploadFormats"
+      type: text
+      required: false
+      description: "voiceDirectUploadFormats"
+    - name: audioFormatPolicy
+      display: "audioFormatPolicy"
+      type: text
+      required: false
+      description: "audioFormatPolicy"
+    - name: tts
+      display: "tts"
+      type: text
+      required: false
+      description: "tts"
+    - name: stt
+      display: "stt"
+      type: text
+      required: false
+      description: "stt"
+    - name: urlDirectUpload
+      display: "urlDirectUpload"
+      type: text
+      required: false
+      description: "urlDirectUpload"
+    - name: upgradeUrl
+      display: "upgradeUrl"
+      type: text
+      required: false
+      description: "upgradeUrl"
+    - name: upgradeMode
+      display: "upgradeMode"
+      type: text
+      required: false
+      description: "upgradeMode"
+    - name: accounts
+      display: "accounts"
+      type: text
+      required: false
+      description: "accounts"
+    - name: defaultAccount
+      display: "defaultAccount"
+      type: text
+      required: false
+      description: "defaultAccount"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

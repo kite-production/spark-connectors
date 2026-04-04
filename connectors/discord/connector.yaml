@@ -1,0 +1,96 @@
+# Spark Connector Spec — discord
+# Auto-generated from OpenClaw extension: discord
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: discord
+  name: "discord"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: headset_mic
+  description: >
+    OpenClaw Discord channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/discord"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-discord
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: agent_button_key
+      display: "AGENT_BUTTON_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: AGENT_BUTTON_KEY"
+    - name: agent_select_key
+      display: "AGENT_SELECT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: AGENT_SELECT_KEY"
+    - name: bindings_by_session_key
+      display: "BINDINGS_BY_SESSION_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: BINDINGS_BY_SESSION_KEY"
+    - name: default_account_key
+      display: "DEFAULT_ACCOUNT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DEFAULT_ACCOUNT_KEY"
+    - name: default_discord_gateway_url
+      display: "DEFAULT_DISCORD_GATEWAY_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_DISCORD_GATEWAY_URL"
+    - name: discord_api
+      display: "DISCORD_API"
+      type: text
+      required: true
+      description: "Environment variable: DISCORD_API"
+    - name: discord_bot_token
+      display: "DISCORD_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: DISCORD_BOT_TOKEN"
+    - name: discord_command_arg_custom_id_key
+      display: "DISCORD_COMMAND_ARG_CUSTOM_ID_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DISCORD_COMMAND_ARG_CUSTOM_ID_KEY"
+    - name: discord_component_custom_id_key
+      display: "DISCORD_COMPONENT_CUSTOM_ID_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DISCORD_COMPONENT_CUSTOM_ID_KEY"
+    - name: discord_component_entries_key
+      display: "DISCORD_COMPONENT_ENTRIES_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DISCORD_COMPONENT_ENTRIES_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

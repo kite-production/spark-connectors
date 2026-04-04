@@ -1,0 +1,71 @@
+# Spark Connector Spec — zalo
+# Auto-generated from OpenClaw extension: zalo
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: zalo
+  name: "zalo"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: chat
+  description: >
+    OpenClaw Zalo channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/zalo"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-zalo
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: zalo_api
+      display: "ZALO_API"
+      type: text
+      required: true
+      description: "Environment variable: ZALO_API"
+    - name: zalo_bot_token
+      display: "ZALO_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: ZALO_BOT_TOKEN"
+    - name: zalo_webhook_secret
+      display: "ZALO_WEBHOOK_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: ZALO_WEBHOOK_SECRET"
+    - name: zalo_work_bot_token
+      display: "ZALO_WORK_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: ZALO_WORK_BOT_TOKEN"
+    - name: zalo_work_webhook_secret
+      display: "ZALO_WORK_WEBHOOK_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: ZALO_WORK_WEBHOOK_SECRET"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

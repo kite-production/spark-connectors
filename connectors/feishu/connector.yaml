@@ -1,0 +1,91 @@
+# Spark Connector Spec — feishu
+# Auto-generated from OpenClaw extension: feishu
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: feishu
+  name: "feishu"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: translate
+  description: >
+    OpenClaw Feishu/Lark channel plugin (community maintained by @m1heng)
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/feishu"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-feishu
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: feishu_app_secret
+      display: "FEISHU_APP_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: FEISHU_APP_SECRET"
+    - name: feishu_card_action_token
+      display: "FEISHU_CARD_ACTION_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: FEISHU_CARD_ACTION_TOKEN"
+    - name: feishu_encrypt_key
+      display: "FEISHU_ENCRYPT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: FEISHU_ENCRYPT_KEY"
+    - name: feishu_thread_bindings_state_key
+      display: "FEISHU_THREAD_BINDINGS_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: FEISHU_THREAD_BINDINGS_STATE_KEY"
+    - name: feishu_verification_token
+      display: "FEISHU_VERIFICATION_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: FEISHU_VERIFICATION_TOKEN"
+    - name: ignored_permission_scope_token
+      display: "IGNORED_PERMISSION_SCOPE_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: IGNORED_PERMISSION_SCOPE_TOKEN"
+    - name: max_external_key
+      display: "MAX_EXTERNAL_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MAX_EXTERNAL_KEY"
+    - name: quick_action_menu_key
+      display: "QUICK_ACTION_MENU_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: QUICK_ACTION_MENU_KEY"
+    - name: test_doc_token
+      display: "TEST_DOC_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: TEST_DOC_TOKEN"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

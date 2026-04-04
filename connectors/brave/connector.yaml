@@ -1,0 +1,41 @@
+# Spark Connector Spec — urave
+# Auto-generated from OpenClaw extension: brave
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: brave
+  name: "urave"
+  type: search
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Search"
+  tags: ["usearch"]
+  icon: search
+  description: >
+    OpenClaw Brave plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/brave"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-brave
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: webSearch
+      display: "webSearch"
+      type: text
+      required: false
+      description: "webSearch"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

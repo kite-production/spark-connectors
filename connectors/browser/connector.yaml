@@ -1,0 +1,86 @@
+# Spark Connector Spec — urowser
+# Auto-generated from OpenClaw extension: browser
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: browser
+  name: "urowser"
+  type: tool
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "DevTools"
+  tags: ["utool"]
+  icon: language
+  description: >
+    OpenClaw browser tool plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/browser"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-browser
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: cdp_port
+      display: "CDP_PORT"
+      type: text
+      required: true
+      description: "Environment variable: CDP_PORT"
+    - name: cdp_url
+      display: "CDP_URL"
+      type: text
+      required: true
+      description: "Environment variable: CDP_URL"
+    - name: default_browser_control_port
+      display: "DEFAULT_BROWSER_CONTROL_PORT"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_BROWSER_CONTROL_PORT"
+    - name: legacy_browser_act_request_key
+      display: "LEGACY_BROWSER_ACT_REQUEST_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: LEGACY_BROWSER_ACT_REQUEST_KEY"
+    - name: missing_gw_token
+      display: "MISSING_GW_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: MISSING_GW_TOKEN"
+    - name: openclaw_gateway_port
+      display: "OPENCLAW_GATEWAY_PORT"
+      type: text
+      required: true
+      description: "Environment variable: OPENCLAW_GATEWAY_PORT"
+    - name: openclaw_gateway_token
+      display: "OPENCLAW_GATEWAY_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: OPENCLAW_GATEWAY_TOKEN"
+    - name: openclaw_live_browser_cdp_url
+      display: "OPENCLAW_LIVE_BROWSER_CDP_URL"
+      type: text
+      required: true
+      description: "Environment variable: OPENCLAW_LIVE_BROWSER_CDP_URL"
+    - name: proxy_env_key
+      display: "PROXY_ENV_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: PROXY_ENV_KEY"
+    - name: safe_non_network_url
+      display: "SAFE_NON_NETWORK_URL"
+      type: text
+      required: true
+      description: "Environment variable: SAFE_NON_NETWORK_URL"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

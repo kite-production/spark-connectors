@@ -1,0 +1,47 @@
+# Spark Connector Spec — zalouser
+# Auto-generated from OpenClaw extension: zalouser
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: zalouser
+  name: "zalouser"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: chat
+  description: >
+    OpenClaw Zalo Personal Account plugin via native zca-js integration
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/zalouser"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-zalouser
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: none
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    []
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

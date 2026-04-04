@@ -1,0 +1,56 @@
+# Spark Connector Spec — line
+# Auto-generated from OpenClaw extension: line
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: line
+  name: "line"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: chat
+  description: >
+    OpenClaw LINE channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/line"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-line
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: line_channel_access_token
+      display: "LINE_CHANNEL_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: LINE_CHANNEL_ACCESS_TOKEN"
+    - name: line_channel_secret
+      display: "LINE_CHANNEL_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: LINE_CHANNEL_SECRET"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

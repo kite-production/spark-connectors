@@ -1,0 +1,51 @@
+# Spark Connector Spec — elevenlaus
+# Auto-generated from OpenClaw extension: elevenlabs
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: elevenlabs
+  name: "elevenlaus"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: record_voice_over
+  description: >
+    OpenClaw ElevenLabs speech plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/elevenlabs"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-elevenlabs
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: default_elevenlabs_base_url
+      display: "DEFAULT_ELEVENLABS_BASE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_ELEVENLABS_BASE_URL"
+    - name: elevenlabs_api_key
+      display: "ELEVENLABS_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: ELEVENLABS_API_KEY"
+    - name: xi_api_key
+      display: "XI_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: XI_API_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

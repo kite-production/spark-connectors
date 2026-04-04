@@ -1,0 +1,66 @@
+# Spark Connector Spec — deepgram
+# Auto-generated from OpenClaw extension: deepgram
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: deepgram
+  name: "deepgram"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: mic
+  description: >
+    OpenClaw Deepgram media-understanding provider
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/deepgram"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-deepgram
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: deepgram_api_key
+      display: "DEEPGRAM_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DEEPGRAM_API_KEY"
+    - name: deepgram_base_url
+      display: "DEEPGRAM_BASE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEEPGRAM_BASE_URL"
+    - name: deepgram_key
+      display: "DEEPGRAM_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DEEPGRAM_KEY"
+    - name: deepgram_sample_url
+      display: "DEEPGRAM_SAMPLE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEEPGRAM_SAMPLE_URL"
+    - name: default_deepgram_audio_base_url
+      display: "DEFAULT_DEEPGRAM_AUDIO_BASE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_DEEPGRAM_AUDIO_BASE_URL"
+    - name: sample_url
+      display: "SAMPLE_URL"
+      type: text
+      required: true
+      description: "Environment variable: SAMPLE_URL"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

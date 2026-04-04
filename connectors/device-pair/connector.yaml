@@ -1,0 +1,41 @@
+# Spark Connector Spec — device pair
+# Auto-generated from OpenClaw extension: device-pair
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: device-pair
+  name: "device pair"
+  type: device
+  version: "1.0.0"
+  publisher: "OpenClaw Community"
+  category: "Devices"
+  tags: ["udevice"]
+  icon: bluetooth
+  description: >
+    OpenClaw device-pair integration
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/device-pair"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-device-pair
+    tag: "1.0.0"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: publicUrl
+      display: "publicUrl"
+      type: text
+      required: false
+      description: "publicUrl"
+
+  tools:
+    []
+
+  versions:
+    - version: "1.0.0"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

@@ -1,0 +1,41 @@
+# Spark Connector Spec — exa
+# Auto-generated from OpenClaw extension: exa
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: exa
+  name: "exa"
+  type: tool
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "DevTools"
+  tags: ["utool"]
+  icon: search
+  description: >
+    OpenClaw Exa plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/exa"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-exa
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: webSearch
+      display: "webSearch"
+      type: text
+      required: false
+      description: "webSearch"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

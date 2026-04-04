@@ -1,0 +1,61 @@
+# Spark Connector Spec — memory lancedb
+# Auto-generated from OpenClaw extension: memory-lancedb
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: memory-lancedb
+  name: "memory lancedb"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: extension
+  description: >
+    OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/memory-lancedb"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-memory-lancedb
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: embedding
+      display: "embedding"
+      type: text
+      required: false
+      description: "embedding"
+    - name: dbPath
+      display: "dbPath"
+      type: text
+      required: false
+      description: "dbPath"
+    - name: autoCapture
+      display: "autoCapture"
+      type: text
+      required: false
+      description: "autoCapture"
+    - name: autoRecall
+      display: "autoRecall"
+      type: text
+      required: false
+      description: "autoRecall"
+    - name: captureMaxChars
+      display: "captureMaxChars"
+      type: text
+      required: false
+      description: "captureMaxChars"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

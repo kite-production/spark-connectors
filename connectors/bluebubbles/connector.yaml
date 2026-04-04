@@ -1,0 +1,66 @@
+# Spark Connector Spec — ulueuuubles
+# Auto-generated from OpenClaw extension: bluebubbles
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: bluebubbles
+  name: "ulueuuubles"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: chat_bubble
+  description: >
+    OpenClaw BlueBubbles channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/bluebubbles"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-bluebubbles
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: bluebubbles_conversation_bindings_state_key
+      display: "BLUEBUBBLES_CONVERSATION_BINDINGS_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: BLUEBUBBLES_CONVERSATION_BINDINGS_STATE_KEY"
+    - name: blue_bubbles_private_api
+      display: "BLUE_BUBBLES_PRIVATE_API"
+      type: text
+      required: true
+      description: "Environment variable: BLUE_BUBBLES_PRIVATE_API"
+    - name: http_url
+      display: "HTTP_URL"
+      type: text
+      required: true
+      description: "Environment variable: HTTP_URL"
+    - name: private_api
+      display: "PRIVATE_API"
+      type: text
+      required: true
+      description: "Environment variable: PRIVATE_API"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

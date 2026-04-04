@@ -1,126 +1,91 @@
-# Spark Connector Spec — Slack
+# Spark Connector Spec — slack
+# Auto-generated from OpenClaw extension: slack
 apiVersion: spark.dev/v1
 kind: Connector
 metadata:
   id: slack
-  name: "Slack"
-  version: "2.4.1"
-  publisher: "Spark Official"
+  name: "slack"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
   category: "Communication"
-  tags: ["Messaging", "Teams", "Enterprise"]
+  tags: ["uchannel"]
   icon: forum
   description: >
-    Real-time messaging for teams. Enable agents to read channels,
-    post notifications, and interact with threads.
-  longDescription: >
-    The Slack connector provides comprehensive integration with Slack
-    workspaces, enabling Spark agents to read messages, post notifications,
-    manage channels, and interact with threads. Built for enterprise-grade
-    reliability with support for OAuth2 and bot tokens.
+    OpenClaw Slack channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/slack"
   license: MIT
-  homepage: https://github.com/kite-production/spark
-  repository: https://github.com/kite-production/spark-connectors
 
 spec:
   docker:
     image: spark/connector-slack
-    tag: "2.4.1"
-    ports:
-      grpc: 50061
+    tag: "2026.4.1-beta.1"
 
   auth:
-    type: oauth2
-    description: "Slack OAuth2 with bot and app tokens"
+    type: api_key
 
   capabilities:
     supports_threads: true
-    supports_reactions: true
-    supports_edit: true
-    supports_unsend: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
     supports_reply: true
     supports_attachments: true
     supports_images: true
-    max_message_length: 4000
-    max_attachment_bytes: 1073741824
-    supported_media_types: ["image/png", "image/jpeg", "image/gif", "application/pdf"]
+    max_message_length: 4096
 
   config:
-    - name: bot_token
-      display: "Bot Token"
+    - name: silent_reply_token
+      display: "SILENT_REPLY_TOKEN"
       type: secret
       required: true
-      description: "Slack bot OAuth token (xoxb-...)"
-
-    - name: app_token
-      display: "App Token"
-      type: secret
-      required: false
-      description: "Slack app-level token for Socket Mode (xapp-...)"
-
-    - name: signing_secret
-      display: "Signing Secret"
+      description: "Environment variable: SILENT_REPLY_TOKEN"
+    - name: slack_angle_token
+      display: "SLACK_ANGLE_TOKEN"
       type: secret
       required: true
-      description: "Slack app signing secret for request verification"
+      description: "Environment variable: SLACK_ANGLE_TOKEN"
+    - name: slack_app_token
+      display: "SLACK_APP_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_APP_TOKEN"
+    - name: slack_bot_token
+      display: "SLACK_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_BOT_TOKEN"
+    - name: slack_external_arg_menu_token
+      display: "SLACK_EXTERNAL_ARG_MENU_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_EXTERNAL_ARG_MENU_TOKEN"
+    - name: slack_interaction_redacted_key
+      display: "SLACK_INTERACTION_REDACTED_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_INTERACTION_REDACTED_KEY"
+    - name: slack_signing_secret
+      display: "SLACK_SIGNING_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_SIGNING_SECRET"
+    - name: slack_thread_participation_key
+      display: "SLACK_THREAD_PARTICIPATION_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_THREAD_PARTICIPATION_KEY"
+    - name: slack_user_token
+      display: "SLACK_USER_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SLACK_USER_TOKEN"
 
   tools:
-    - name: slack-send-message
-      method: POST
-      description: "Send a message to a channel or DM"
-      args:
-        - name: channel
-          type: string
-          description: "Channel ID or name"
-          required: true
-        - name: text
-          type: string
-          description: "Message content (mrkdwn format)"
-          required: true
-
-    - name: slack-list-channels
-      method: GET
-      description: "List all channels in the workspace"
-      args:
-        - name: limit
-          type: number
-          description: "Max channels to return (default 100)"
-          required: false
-          default: "100"
-
-    - name: slack-read-channel
-      method: GET
-      description: "Read recent messages from a channel"
-      args:
-        - name: channel
-          type: string
-          description: "Channel ID"
-          required: true
-        - name: limit
-          type: number
-          description: "Number of messages to fetch"
-          required: false
-          default: "50"
+    []
 
   versions:
-    - version: "2.4.1"
-      date: "2026-03-15"
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
       changes:
-        - "Improved Socket Mode reconnection"
-        - "Added message chunking for long responses"
-        - "Fixed thread timestamp handling"
-
-    - version: "2.4.0"
-      date: "2026-02-01"
-      changes:
-        - "Added reaction support"
-        - "Added message edit/delete support"
-        - "Performance improvements for large workspaces"
-
-  setup: |
-    1. Create a Slack App at https://api.slack.com/apps
-    2. Enable Socket Mode in your app settings
-    3. Add required bot scopes: channels:read, channels:history,
-       chat:write, reactions:read, reactions:write
-    4. Install the app to your workspace
-    5. Copy the Bot Token (xoxb-...) and App Token (xapp-...)
-    6. Enter them in the connector configuration
+        - "Auto-generated from OpenClaw extension"

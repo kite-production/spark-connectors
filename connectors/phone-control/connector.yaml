@@ -1,0 +1,37 @@
+# Spark Connector Spec — phone control
+# Auto-generated from OpenClaw extension: phone-control
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: phone-control
+  name: "phone control"
+  type: device
+  version: "1.0.0"
+  publisher: "OpenClaw Community"
+  category: "Devices"
+  tags: ["udevice"]
+  icon: phone_android
+  description: >
+    OpenClaw phone-control integration
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/phone-control"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-phone-control
+    tag: "1.0.0"
+
+  auth:
+    type: none
+
+  config:
+    []
+
+  tools:
+    []
+
+  versions:
+    - version: "1.0.0"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

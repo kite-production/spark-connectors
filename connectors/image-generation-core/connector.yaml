@@ -1,0 +1,51 @@
+# Spark Connector Spec — image generation core
+# Auto-generated from OpenClaw extension: image-generation-core
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: image-generation-core
+  name: "image generation core"
+  type: service
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Services"
+  tags: ["uservice"]
+  icon: extension
+  description: >
+    OpenClaw image generation runtime package
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/image-generation-core"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-image-generation-core
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  config:
+    - name: gemini_api_key
+      display: "GEMINI_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: GEMINI_API_KEY"
+    - name: google_api_key
+      display: "GOOGLE_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: GOOGLE_API_KEY"
+    - name: openai_api_key
+      display: "OPENAI_API_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: OPENAI_API_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

@@ -1,0 +1,96 @@
+# Spark Connector Spec — telegram
+# Auto-generated from OpenClaw extension: telegram
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: telegram
+  name: "telegram"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: send
+  description: >
+    OpenClaw Telegram channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/telegram"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-telegram
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: bot_token
+      display: "BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: BOT_TOKEN"
+    - name: status_reaction_emoji_key
+      display: "STATUS_REACTION_EMOJI_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: STATUS_REACTION_EMOJI_KEY"
+    - name: telegram_api
+      display: "TELEGRAM_API"
+      type: text
+      required: true
+      description: "Environment variable: TELEGRAM_API"
+    - name: telegram_bot_token
+      display: "TELEGRAM_BOT_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_BOT_TOKEN"
+    - name: telegram_draft_stream_state_key
+      display: "TELEGRAM_DRAFT_STREAM_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_DRAFT_STREAM_STATE_KEY"
+    - name: telegram_secret
+      display: "TELEGRAM_SECRET"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_SECRET"
+    - name: telegram_sent_messages_state_key
+      display: "TELEGRAM_SENT_MESSAGES_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_SENT_MESSAGES_STATE_KEY"
+    - name: telegram_thread_bindings_state_key
+      display: "TELEGRAM_THREAD_BINDINGS_STATE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_THREAD_BINDINGS_STATE_KEY"
+    - name: telegram_token
+      display: "TELEGRAM_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: TELEGRAM_TOKEN"
+    - name: tg_status_token
+      display: "TG_STATUS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: TG_STATUS_TOKEN"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

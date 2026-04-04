@@ -1,0 +1,96 @@
+# Spark Connector Spec — msteams
+# Auto-generated from OpenClaw extension: msteams
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: msteams
+  name: "msteams"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: groups
+  description: >
+    OpenClaw Microsoft Teams channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/msteams"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-msteams
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: default_message_url
+      display: "DEFAULT_MESSAGE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_MESSAGE_URL"
+    - name: default_share_reference_url
+      display: "DEFAULT_SHARE_REFERENCE_URL"
+      type: text
+      required: true
+      description: "Environment variable: DEFAULT_SHARE_REFERENCE_URL"
+    - name: graph_shares_url
+      display: "GRAPH_SHARES_URL"
+      type: text
+      required: true
+      description: "Environment variable: GRAPH_SHARES_URL"
+    - name: graph_url
+      display: "GRAPH_URL"
+      type: text
+      required: true
+      description: "Environment variable: GRAPH_URL"
+    - name: msteams_sent_messages_key
+      display: "MSTEAMS_SENT_MESSAGES_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MSTEAMS_SENT_MESSAGES_KEY"
+    - name: plugin_dependencies_metadata_key
+      display: "PLUGIN_DEPENDENCIES_METADATA_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: PLUGIN_DEPENDENCIES_METADATA_KEY"
+    - name: plugin_events_metadata_key
+      display: "PLUGIN_EVENTS_METADATA_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: PLUGIN_EVENTS_METADATA_KEY"
+    - name: plugin_metadata_key
+      display: "PLUGIN_METADATA_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: PLUGIN_METADATA_KEY"
+    - name: silent_reply_token
+      display: "SILENT_REPLY_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: SILENT_REPLY_TOKEN"
+    - name: test_url
+      display: "TEST_URL"
+      type: text
+      required: true
+      description: "Environment variable: TEST_URL"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"

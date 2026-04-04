@@ -1,0 +1,96 @@
+# Spark Connector Spec — matrix
+# Auto-generated from OpenClaw extension: matrix
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: matrix
+  name: "matrix"
+  type: channel
+  version: "2026.4.1-beta.1"
+  publisher: "OpenClaw Community"
+  category: "Communication"
+  tags: ["uchannel"]
+  icon: grid_view
+  description: >
+    OpenClaw Matrix channel plugin
+  source: "https://github.com/openclaw/openclaw/tree/main/extensions/matrix"
+  license: MIT
+
+spec:
+  docker:
+    image: spark/connector-matrix
+    tag: "2026.4.1-beta.1"
+
+  auth:
+    type: api_key
+
+  capabilities:
+    supports_threads: true
+    supports_reactions: false
+    supports_edit: false
+    supports_unsend: false
+    supports_reply: true
+    supports_attachments: true
+    supports_images: true
+    max_message_length: 4096
+
+  config:
+    - name: access_token
+      display: "ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: ACCESS_TOKEN"
+    - name: common_single_account_key
+      display: "COMMON_SINGLE_ACCOUNT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: COMMON_SINGLE_ACCOUNT_KEY"
+    - name: default_account_key
+      display: "DEFAULT_ACCOUNT_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DEFAULT_ACCOUNT_KEY"
+    - name: direct_account_data_queue_key
+      display: "DIRECT_ACCOUNT_DATA_QUEUE_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: DIRECT_ACCOUNT_DATA_QUEUE_KEY"
+    - name: d_prod_access_token
+      display: "D_PROD_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: D_PROD_ACCESS_TOKEN"
+    - name: f_prod_access_token
+      display: "F_PROD_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: F_PROD_ACCESS_TOKEN"
+    - name: matrix_access_token
+      display: "MATRIX_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: MATRIX_ACCESS_TOKEN"
+    - name: matrix_alerts_access_token
+      display: "MATRIX_ALERTS_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: MATRIX_ALERTS_ACCESS_TOKEN"
+    - name: matrix_default_access_token
+      display: "MATRIX_DEFAULT_ACCESS_TOKEN"
+      type: secret
+      required: true
+      description: "Environment variable: MATRIX_DEFAULT_ACCESS_TOKEN"
+    - name: matrix_env_key
+      display: "MATRIX_ENV_KEY"
+      type: secret
+      required: true
+      description: "Environment variable: MATRIX_ENV_KEY"
+
+  tools:
+    []
+
+  versions:
+    - version: "2026.4.1-beta.1"
+      date: "2026-04-04"
+      changes:
+        - "Auto-generated from OpenClaw extension"
