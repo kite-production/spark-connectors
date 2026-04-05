@@ -41,35 +41,35 @@ connectors/{id}/
 
 ## Channel Connectors (24)
 
-| # | Connector | Go SDK/API | Status | Priority | Notes |
-|---|-----------|-----------|--------|----------|-------|
-| 1 | **slack** | `slack-go/slack` | ✅ DONE | — | Already built in spark repo |
-| 2 | **gmail** | Google API Go client | ✅ DONE | — | Already built in spark repo |
-| 3 | **googlechat** | Google API Go client | ✅ DONE | — | Already built in spark repo |
-| 4 | **notion** | Notion REST API | ✅ DONE | — | Already built in spark repo |
-| 5 | **magellan** | Venus HTTP API | ✅ DONE | — | Already built in spark repo |
-| 6 | **whatsapp** | `mattn/go-whatsapp` or Baileys REST wrapper | ⏳ PENDING | HIGH | 2B+ users, critical channel |
-| 7 | **telegram** | `go-telegram-bot-api/telegram-bot-api` | ⏳ PENDING | HIGH | Well-documented Go SDK |
-| 8 | **discord** | `bwmarrin/discordgo` | ⏳ PENDING | HIGH | Mature Go SDK |
-| 9 | **msteams** | Microsoft Graph API Go client | ⏳ PENDING | HIGH | Enterprise channel |
-| 10 | **signal** | Signal REST API / `signal-cli` | ⏳ PENDING | MEDIUM | May need signal-cli bridge |
-| 11 | **matrix** | `mautrix/go` | ⏳ PENDING | MEDIUM | Good Go SDK exists |
-| 12 | **imessage** | AppleScript / BlueBubbles API | ⏳ PENDING | LOW | macOS only |
-| 13 | **bluebubbles** | BlueBubbles REST API | ⏳ PENDING | LOW | iMessage bridge |
-| 14 | **irc** | `thoj/go-ircevent` | ⏳ PENDING | LOW | Simple protocol |
-| 15 | **line** | LINE Messaging API (REST) | ⏳ PENDING | MEDIUM | REST-based |
-| 16 | **mattermost** | `mattermost/model` Go pkg | ⏳ PENDING | LOW | Good Go SDK |
-| 17 | **feishu** | Lark/Feishu Open API (REST) | ⏳ PENDING | LOW | REST-based |
-| 18 | **twitch** | `gempir/go-twitch-irc` | ⏳ PENDING | LOW | IRC-based |
-| 19 | **nostr** | `nbd-wtf/go-nostr` | ⏳ PENDING | LOW | Go SDK exists |
-| 20 | **zalo** | Zalo OA REST API | ⏳ PENDING | LOW | REST-based |
-| 21 | **zalouser** | Zalo User API | ⏳ PENDING | LOW | REST-based |
-| 22 | **qqbot** | QQ Bot REST API | ⏳ PENDING | LOW | REST-based |
-| 23 | **nextcloud-talk** | Nextcloud Talk REST API | ⏳ PENDING | LOW | REST-based |
-| 24 | **synology-chat** | Synology Chat webhook API | ⏳ PENDING | LOW | Webhook-based |
-| 25 | **tlon** | Tlon/Urbit API | ⏳ PENDING | LOW | Niche |
-| 26 | **xiaomi** | Xiaomi IoT API | ⏳ PENDING | LOW | IoT device |
-| 27 | **voice-call** | WebRTC / SIP | ⏳ PENDING | LOW | Complex protocol |
+| # | Connector | SDK Language | SDK Package | Status | Priority | Notes |
+|---|-----------|-------------|------------|--------|----------|-------|
+| 1 | **slack** | Go | `slack-go/slack` | ✅ DONE | — | Already in spark repo |
+| 2 | **gmail** | Go | `google.golang.org/api` | ✅ DONE | — | Already in spark repo |
+| 3 | **googlechat** | Go | `google.golang.org/api` | ✅ DONE | — | Already in spark repo |
+| 4 | **notion** | Go | `net/http` (REST) | ✅ DONE | — | Already in spark repo |
+| 5 | **magellan** | Go | `net/http` | ✅ DONE | — | Already in spark repo |
+| 6 | **telegram** | Go | `go-telegram-bot-api/telegram-bot-api` | ⏳ PENDING | HIGH | Mature Go SDK |
+| 7 | **discord** | Go | `bwmarrin/discordgo` | ⏳ PENDING | HIGH | Mature Go SDK |
+| 8 | **msteams** | Go | Microsoft Graph REST API | ⏳ PENDING | HIGH | REST, no SDK needed |
+| 9 | **whatsapp** | **TypeScript** | `@whiskeysockets/baileys` | ⏳ PENDING | HIGH | No mature Go SDK — use TS |
+| 10 | **matrix** | Go | `mautrix/go` | ⏳ PENDING | MEDIUM | Good Go SDK |
+| 11 | **signal** | **Python** | `signal-cli` (Java CLI, Python wrapper) | ⏳ PENDING | MEDIUM | Needs signal-cli bridge |
+| 12 | **line** | **TypeScript** | `@line/bot-sdk` | ⏳ PENDING | MEDIUM | TS SDK preferred |
+| 13 | **irc** | Go | `thoj/go-ircevent` | ⏳ PENDING | LOW | Simple protocol |
+| 14 | **mattermost** | Go | `mattermost/model` | ⏳ PENDING | LOW | Good Go SDK |
+| 15 | **twitch** | Go | `gempir/go-twitch-irc` | ⏳ PENDING | LOW | IRC-based |
+| 16 | **nostr** | Go | `nbd-wtf/go-nostr` | ⏳ PENDING | LOW | Go SDK exists |
+| 17 | **feishu** | **TypeScript** | `@larksuiteoapi/node-sdk` | ⏳ PENDING | LOW | TS SDK preferred |
+| 18 | **imessage** | Go | osascript bridge | ⏳ PENDING | LOW | macOS only |
+| 19 | **bluebubbles** | **TypeScript** | BlueBubbles API | ⏳ PENDING | LOW | TS SDK only |
+| 20 | **zalo** | Go | REST API (`net/http`) | ⏳ PENDING | LOW | REST-based |
+| 21 | **zalouser** | Go | REST API (`net/http`) | ⏳ PENDING | LOW | REST-based |
+| 22 | **qqbot** | Go | REST API (`net/http`) | ⏳ PENDING | LOW | REST-based |
+| 23 | **nextcloud-talk** | Go | REST API (`net/http`) | ⏳ PENDING | LOW | REST-based |
+| 24 | **synology-chat** | Go | Webhook API (`net/http`) | ⏳ PENDING | LOW | Webhook-based |
+| 25 | **tlon** | Go | REST API (`net/http`) | ⏳ PENDING | LOW | Niche |
+| 26 | **xiaomi** | **TypeScript** | `xiaomi-cloud` | ⏳ PENDING | LOW | TS SDK only |
+| 27 | **voice-call** | Go | `pion/webrtc` | ⏳ PENDING | LOW | Complex protocol |
 
 ## Search Providers (4)
 
