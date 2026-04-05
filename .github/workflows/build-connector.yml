@@ -1,0 +1,93 @@
+name: Build Connector Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/*/src/**'
+      - 'shared/**'
+  workflow_dispatch:
+    inputs:
+      connector:
+        description: 'Connector ID to build (e.g., magellan, telegram)'
+        required: true
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/kite-production
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      connectors: ${{ steps.detect.outputs.connectors }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - id: detect
+        env:
+          INPUT_CONNECTOR: ${{ inputs.connector }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "connectors=[\"${INPUT_CONNECTOR}\"]" >> "$GITHUB_OUTPUT"
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^connectors/' | cut -d'/' -f2 | sort -u | jq -R . | jq -s .)
+            if git diff --name-only HEAD~1 HEAD | grep -q '^shared/'; then
+              CHANGED=$(ls -d connectors/*/src 2>/dev/null | cut -d'/' -f2 | jq -R . | jq -s .)
+            fi
+            echo "connectors=${CHANGED}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.connectors != '[]' && needs.detect-changes.outputs.connectors != ''
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        connector: ${{ fromJSON(needs.detect-changes.outputs.connectors) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check connector has source
+        run: |
+          if [ ! -d "connectors/${{ matrix.connector }}/src" ]; then
+            echo "No source directory for ${{ matrix.connector }}, skipping"
+            exit 0
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from connector.yaml
+        id: version
+        run: |
+          VERSION=$(grep 'version:' "connectors/${{ matrix.connector }}/connector.yaml" | head -1 | sed 's/.*"\(.*\)"/\1/')
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Building ${{ matrix.connector }} version ${VERSION}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: connectors/${{ matrix.connector }}/src/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/kite-production/connector-${{ matrix.connector }}:${{ steps.version.outputs.version }}
+            ghcr.io/kite-production/connector-${{ matrix.connector }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
