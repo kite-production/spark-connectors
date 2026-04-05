@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "carbon"
+    language: go
     docker:
       image: spark/connector-discord
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50130
+        grpc: 50169
 
   auth:
     type: api_key
@@ -179,45 +178,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "action-runtime-api.ts"
-    files:
-      - path: "action-runtime-api.ts"
-        language: typescript
-        size: 64
-      - path: "api.ts"
-        language: typescript
-        size: 1168
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 69
-      - path: "config-api.ts"
-        language: typescript
-        size: 112
-      - path: "contract-api.ts"
-        language: typescript
-        size: 711
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 624
-      - path: "index.ts"
-        language: typescript
-        size: 1419
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 152
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 837
-      - path: "session-key-api.ts"
-        language: typescript
-        size: 89
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 258
-      - path: "test-api.ts"
-        language: typescript
-        size: 319
-      - path: "timeouts.ts"
-        language: typescript
-        size: 129
+  # Go implementation: connectors/discord/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

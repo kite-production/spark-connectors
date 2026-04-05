@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-media-understanding-core
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50159
+        grpc: 50083
 
   auth:
     type: api_key
@@ -83,9 +83,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "runtime-api.ts"
-    files:
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 240
+  # Go implementation: connectors/media-understanding-core/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

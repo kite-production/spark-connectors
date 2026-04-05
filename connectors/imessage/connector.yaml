@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-imessage
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50080
+        grpc: 50093
 
   auth:
     type: none
@@ -148,33 +148,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 601
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 70
-      - path: "config-api.ts"
-        language: typescript
-        size: 113
-      - path: "contract-api.ts"
-        language: typescript
-        size: 408
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 3170
-      - path: "index.ts"
-        language: typescript
-        size: 469
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 154
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 1505
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 253
+  # Go implementation: connectors/imessage/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

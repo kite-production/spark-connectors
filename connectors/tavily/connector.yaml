@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-tavily
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50099
+        grpc: 50139
 
   auth:
     type: api_key
@@ -102,15 +102,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "index.ts"
-    files:
-      - path: "index.ts"
-        language: typescript
-        size: 678
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 951
-      - path: "web-search-provider.ts"
-        language: typescript
-        size: 81
+  # Go implementation: connectors/tavily/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-speech-core
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50111
+        grpc: 50149
 
   auth:
     type: api_key
@@ -88,12 +88,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 49
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 744
+  # Go implementation: connectors/speech-core/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

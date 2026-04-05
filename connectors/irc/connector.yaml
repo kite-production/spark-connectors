@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-irc
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50085
+        grpc: 50135
 
   auth:
     type: api_key
@@ -202,24 +202,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 75
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 65
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 395
-      - path: "index.ts"
-        language: typescript
-        size: 504
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 144
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 164
+  # Go implementation: connectors/irc/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

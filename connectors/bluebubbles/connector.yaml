@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-bluebubbles
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50101
+        grpc: 50120
 
   auth:
     type: api_key
@@ -143,27 +143,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 345
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 73
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 110
-      - path: "index.ts"
-        language: typescript
-        size: 516
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 160
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 119
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 270
+  # Go implementation: connectors/bluebubbles/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

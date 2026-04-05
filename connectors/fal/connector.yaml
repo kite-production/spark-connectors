@@ -28,7 +28,7 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-fal
       tag: "2026.4.1-beta.1"
@@ -88,24 +88,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "image-generation-provider.test.ts"
-    files:
-      - path: "image-generation-provider.test.ts"
-        language: typescript
-        size: 12470
-      - path: "image-generation-provider.ts"
-        language: typescript
-        size: 12590
-      - path: "index.ts"
-        language: typescript
-        size: 1553
-      - path: "onboard.ts"
-        language: typescript
-        size: 509
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 739
-      - path: "test-api.ts"
-        language: typescript
-        size: 82
+  # Go implementation: connectors/fal/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

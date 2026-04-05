@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-exa
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50166
+        grpc: 50084
 
   auth:
     type: api_key
@@ -88,15 +88,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "index.ts"
-    files:
-      - path: "index.ts"
-        language: typescript
-        size: 360
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 651
-      - path: "web-search-provider.ts"
-        language: typescript
-        size: 90
+  # Go implementation: connectors/exa/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "api"
+    language: go
     docker:
       image: spark/connector-twitch
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50162
+        grpc: 50142
 
   auth:
     type: oauth2
@@ -149,18 +148,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 34
-      - path: "index.ts"
-        language: typescript
-        size: 411
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 150
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 176
+  # Go implementation: connectors/twitch/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "bolt"
+    language: go
     docker:
       image: spark/connector-slack
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50160
+        grpc: 50126
 
   auth:
     type: oauth2
@@ -173,39 +172,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 960
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 67
-      - path: "channel-entry.ts"
-        language: typescript
-        size: 450
-      - path: "config-api.ts"
-        language: typescript
-        size: 110
-      - path: "contract-api.ts"
-        language: typescript
-        size: 493
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 457
-      - path: "index.ts"
-        language: typescript
-        size: 574
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 148
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 197
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 252
-      - path: "test-api.ts"
-        language: typescript
-        size: 575
+  # Go implementation: connectors/slack/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

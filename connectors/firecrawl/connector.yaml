@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-firecrawl
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50081
+        grpc: 50132
 
   auth:
     type: api_key
@@ -94,18 +94,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 1860
-      - path: "index.ts"
-        language: typescript
-        size: 864
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 1830
-      - path: "web-search-provider.ts"
-        language: typescript
-        size: 87
+  # Go implementation: connectors/firecrawl/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

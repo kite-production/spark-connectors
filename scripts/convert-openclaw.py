@@ -297,10 +297,7 @@ def generate_yaml(ext_id: str, ext_dir: Path) -> str:
     # Runtime
     w(f"  runtime:")
     w(f"    type: docker")
-    w(f"    language: typescript")
-    if deps:
-        framework = deps[0].split("/")[-1] if "/" in deps[0] else deps[0]
-        w(f'    framework: "{framework}"')
+    w(f"    language: go")
     w(f"    docker:")
     w(f"      image: spark/connector-{ext_id}")
     w(f'      tag: "{version}"')
@@ -506,20 +503,16 @@ def generate_yaml(ext_id: str, ext_dir: Path) -> str:
     w(f"    4. Click 'Test Connection' to verify")
     w(f"    5. Enable the connector for your agents")
 
-    # Code section (file listing — not full content to keep YAML manageable)
+    # Source reference (Go implementation lives alongside connector.yaml)
     w(f"")
-    w(f"  code:")
-    if source_files:
-        entry = source_files[0]["path"] if source_files else "index.ts"
-        w(f'    entrypoint: "{entry}"')
-        w(f"    files:")
-        for sf in source_files[:15]:  # Limit to 15 files
-            w(f'      - path: "{sf["path"]}"')
-            w(f'        language: {sf["language"]}')
-            w(f"        size: {sf['size']}")
-    else:
-        w(f'    entrypoint: "index.ts"')
-        w(f"    files: []")
+    w(f"  # Go implementation: connectors/{ext_id}/src/")
+    w(f"  # Each connector has a separate Go module with:")
+    w(f"  #   cmd/server/main.go        — entry point")
+    w(f"  #   internal/service/service.go — ConnectorService gRPC impl")
+    w(f"  #   internal/normalizer/       — message normalization")
+    w(f"  #   Dockerfile                 — container build")
+    w(f"  #   go.mod                     — dependencies")
+    w(f"  # Status: pending Go conversion")
 
     return "\n".join(lines) + "\n"
 

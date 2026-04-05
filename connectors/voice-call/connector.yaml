@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "typebox"
+    language: go
     docker:
       image: spark/connector-voice-call
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50091
+        grpc: 50144
 
   auth:
     type: api_key
@@ -323,30 +322,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 34
-      - path: "cli-metadata.ts"
-        language: typescript
-        size: 271
-      - path: "config-api.ts"
-        language: typescript
-        size: 474
-      - path: "index.test.ts"
-        language: typescript
-        size: 8428
-      - path: "index.ts"
-        language: typescript
-        size: 19638
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 18340
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 184
-      - path: "runtime-entry.ts"
-        language: typescript
-        size: 82
+  # Go implementation: connectors/voice-call/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

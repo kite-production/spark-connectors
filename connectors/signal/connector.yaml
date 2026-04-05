@@ -28,12 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-signal
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50149
+        grpc: 50073
 
   auth:
     type: device_token
@@ -143,42 +143,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 515
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 68
-      - path: "channel-entry.ts"
-        language: typescript
-        size: 459
-      - path: "config-api.ts"
-        language: typescript
-        size: 111
-      - path: "contract-api.ts"
-        language: typescript
-        size: 159
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 51
-      - path: "index.ts"
-        language: typescript
-        size: 459
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 150
-      - path: "reaction-runtime-api.ts"
-        language: typescript
-        size: 145
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 38
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 255
-      - path: "test-api.ts"
-        language: typescript
-        size: 60
+  # Go implementation: connectors/signal/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

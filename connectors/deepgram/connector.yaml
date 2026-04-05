@@ -28,7 +28,7 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
+    language: go
     docker:
       image: spark/connector-deepgram
       tag: "2026.4.1-beta.1"
@@ -106,27 +106,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "audio.live.test.ts"
-    files:
-      - path: "audio.live.test.ts"
-        language: typescript
-        size: 1597
-      - path: "audio.test.ts"
-        language: typescript
-        size: 2682
-      - path: "audio.ts"
-        language: typescript
-        size: 2503
-      - path: "index.ts"
-        language: typescript
-        size: 423
-      - path: "media-understanding-provider.ts"
-        language: typescript
-        size: 387
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 293
-      - path: "test-api.ts"
-        language: typescript
-        size: 88
+  # Go implementation: connectors/deepgram/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

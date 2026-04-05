@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "baileys"
+    language: go
     docker:
       image: spark/connector-whatsapp
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50144
+        grpc: 50154
 
   auth:
     type: qr_code
@@ -161,51 +160,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "action-runtime-api.ts"
-    files:
-      - path: "action-runtime-api.ts"
-        language: typescript
-        size: 64
-      - path: "action-runtime.runtime.ts"
-        language: typescript
-        size: 64
-      - path: "api.ts"
-        language: typescript
-        size: 995
-      - path: "auth-presence.ts"
-        language: typescript
-        size: 2171
-      - path: "channel-config-api.ts"
-        language: typescript
-        size: 70
-      - path: "config-api.ts"
-        language: typescript
-        size: 113
-      - path: "constants.ts"
-        language: typescript
-        size: 73
-      - path: "contract-api.ts"
-        language: typescript
-        size: 2749
-      - path: "contract-surfaces.ts"
-        language: typescript
-        size: 1684
-      - path: "index.ts"
-        language: typescript
-        size: 469
-      - path: "light-runtime-api.ts"
-        language: typescript
-        size: 363
-      - path: "login-qr-api.ts"
-        language: typescript
-        size: 809
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 154
-      - path: "runtime-api.ts"
-        language: typescript
-        size: 1174
-      - path: "setup-entry.ts"
-        language: typescript
-        size: 253
+  # Go implementation: connectors/whatsapp/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion

@@ -28,13 +28,12 @@ metadata:
 spec:
   runtime:
     type: docker
-    language: typescript
-    framework: "lancedb"
+    language: go
     docker:
       image: spark/connector-memory-lancedb
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50153
+        grpc: 50128
 
   auth:
     type: api_key
@@ -113,33 +112,11 @@ spec:
     4. Click 'Test Connection' to verify
     5. Enable the connector for your agents
 
-  code:
-    entrypoint: "api.ts"
-    files:
-      - path: "api.ts"
-        language: typescript
-        size: 52
-      - path: "cli-metadata.ts"
-        language: typescript
-        size: 278
-      - path: "config.ts"
-        language: typescript
-        size: 5376
-      - path: "index.test.ts"
-        language: typescript
-        size: 15287
-      - path: "index.ts"
-        language: typescript
-        size: 20044
-      - path: "lancedb-runtime.test.ts"
-        language: typescript
-        size: 2992
-      - path: "lancedb-runtime.ts"
-        language: typescript
-        size: 9826
-      - path: "memory-lancedb.live.test.ts"
-        language: typescript
-        size: 5254
-      - path: "openclaw.plugin.json"
-        language: json
-        size: 2264
+  # Go implementation: connectors/memory-lancedb/src/
+  # Each connector has a separate Go module with:
+  #   cmd/server/main.go        — entry point
+  #   internal/service/service.go — ConnectorService gRPC impl
+  #   internal/normalizer/       — message normalization
+  #   Dockerfile                 — container build
+  #   go.mod                     — dependencies
+  # Status: pending Go conversion
