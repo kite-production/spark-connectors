@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "REST API (net/http)"
+    execution_mode: on_demand
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-brave
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50140
+        grpc: 50087
 
   auth:
     type: api_key

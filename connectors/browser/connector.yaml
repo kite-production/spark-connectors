@@ -31,12 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "chromedp/chromedp"
+    execution_mode: on_demand
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-browser
       tag: "2026.4.1-beta.1"
-      image_available: true
       ports:
-        grpc: 50094
+        grpc: 50095
 
   auth:
     type: api_key

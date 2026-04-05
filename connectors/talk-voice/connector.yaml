@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "internal"
+    execution_mode: on_demand
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-talk-voice
       tag: "1.0.0"
       ports:
-        grpc: 50107
+        grpc: 50086
 
   auth:
     type: api_key

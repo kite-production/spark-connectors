@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "internal"
+    execution_mode: on_demand
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-image-generation-core
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50118
+        grpc: 50108
 
   auth:
     type: api_key

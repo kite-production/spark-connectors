@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "mautrix/go"
+    execution_mode: persistent
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-matrix
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50104
+        grpc: 50070
 
   auth:
     type: api_key

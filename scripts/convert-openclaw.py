@@ -112,6 +112,17 @@ INGESTION_MAP = {
     "device": ("false", "none", "Device connector — executes commands on paired devices"),
 }
 
+# Execution mode: persistent (long-running) vs on_demand (start per call)
+# Channels that monitor events need persistent containers
+# Tools/services/search only run when called
+EXECUTION_MODE_MAP = {
+    "channel": "persistent",    # Long-running: monitors events (WebSocket, long-poll)
+    "tool": "on_demand",        # Start per tool call, stop after execution
+    "service": "on_demand",     # Start per service call
+    "search": "on_demand",      # Start per search query
+    "device": "on_demand",      # Start per device command
+}
+
 # SDK language mapping — what language the vendor SDK is written in.
 # "go" means a native Go SDK exists. Others mean we use the vendor's SDK language.
 # The connector's runtime language (what we build in) defaults to Go,
@@ -361,11 +372,15 @@ def generate_yaml(ext_id: str, ext_dir: Path) -> str:
 
     # Runtime
     sdk_lang, sdk_pkg = SDK_LANGUAGE_MAP.get(ext_id, ("go", "net/http"))
+    exec_mode = EXECUTION_MODE_MAP.get(ext_type, "on_demand")
     w(f"  runtime:")
     w(f"    type: docker")
     w(f"    language: go")
     w(f"    sdk_language: {sdk_lang}")
     w(f'    sdk_package: "{sdk_pkg}"')
+    w(f"    execution_mode: {exec_mode}")
+    w(f"    # persistent = long-running container (monitors events)")
+    w(f"    # on_demand  = container started per tool/action call, stopped after")
     w(f"    docker:")
     w(f"      image: ghcr.io/kite-production/connector-{ext_id}")
     w(f'      tag: "{version}"')

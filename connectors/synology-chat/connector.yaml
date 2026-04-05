@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "Webhook API (net/http)"
+    execution_mode: persistent
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-synology-chat
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50159
+        grpc: 50088
 
   auth:
     type: api_key

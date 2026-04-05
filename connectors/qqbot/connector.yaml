@@ -31,11 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "REST API (net/http)"
+    execution_mode: persistent
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-qqbot
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50143
+        grpc: 50114
 
   auth:
     type: api_key

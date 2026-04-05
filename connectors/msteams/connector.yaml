@@ -31,12 +31,14 @@ spec:
     language: go
     sdk_language: go
     sdk_package: "Microsoft Graph REST API"
+    execution_mode: persistent
+    # persistent = long-running container (monitors events)
+    # on_demand  = container started per tool/action call, stopped after
     docker:
       image: ghcr.io/kite-production/connector-msteams
       tag: "2026.4.1-beta.1"
-      image_available: true
       ports:
-        grpc: 50161
+        grpc: 50103
 
   auth:
     type: oauth2
