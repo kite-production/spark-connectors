@@ -1,25 +1,20 @@
 FROM golang:1.24-alpine AS builder
-
 WORKDIR /app
 
-# Copy local dependency modules first for layer caching.
-COPY contracts/gen/go/ ./contracts/gen/go/
-COPY pkg/ ./pkg/
-COPY services/cross-service/ ./services/cross-service/
+# Copy shared dependencies
+COPY shared/ ./shared/
 
-# Copy service dependency manifests and download deps.
-COPY services/connector-gmail/go.mod services/connector-gmail/go.sum ./services/connector-gmail/
-WORKDIR /app/services/connector-gmail
+# Copy connector source
+COPY connectors/gmail/src/ ./connectors/gmail/src/
+
+WORKDIR /app/connectors/gmail/src
 RUN go mod download
+RUN CGO_ENABLED=0 go build -o /bin/connector ./cmd/server
 
-# Copy service source and build.
-COPY services/connector-gmail/ ./
-RUN CGO_ENABLED=0 go build -o /bin/service ./cmd/server
-
-# Install grpc_health_probe for container health checks.
+# Install grpc_health_probe
 RUN GOBIN=/usr/local/bin go install github.com/grpc-ecosystem/grpc-health-probe@latest
 
 FROM gcr.io/distroless/static-debian12:nonroot
-COPY --from=builder /bin/service /bin/service
+COPY --from=builder /bin/connector /bin/service
 COPY --from=builder /usr/local/bin/grpc-health-probe /bin/grpc_health_probe
 ENTRYPOINT ["/bin/service"]
