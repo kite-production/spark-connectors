@@ -1,0 +1,24 @@
+apiVersion: spark.dev/v1
+kind: Connector
+metadata:
+  id: notion
+  name: "Unotion"
+  type: channel
+  version: "1.0.0"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
+  category: "Communication"
+  icon: sticky_note_2
+  description: "Spark notion connector"
+  license: MIT
+spec:
+  runtime:
+    type: docker
+    language: go
+    sdk_language: go
+    docker:
+      image: ghcr.io/kite-production/connector-notion
+      tag: "1.0.0"
