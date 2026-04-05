@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: typescript
+    sdk_package: "@larksuiteoapi/node-sdk"
     docker:
       image: spark/connector-feishu
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50118
+        grpc: 50157
 
   auth:
     type: api_key

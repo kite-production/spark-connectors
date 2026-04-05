@@ -29,6 +29,8 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: go
+    sdk_package: "nbd-wtf/go-nostr"
     docker:
       image: spark/connector-nostr
       tag: "2026.4.1-beta.1"

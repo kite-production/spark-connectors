@@ -112,6 +112,71 @@ INGESTION_MAP = {
     "device": ("false", "none", "Device connector — executes commands on paired devices"),
 }
 
+# SDK language mapping — what language the vendor SDK is written in.
+# "go" means a native Go SDK exists. Others mean we use the vendor's SDK language.
+# The connector's runtime language (what we build in) defaults to Go,
+# but sdk_language indicates what the vendor provides and we may use.
+SDK_LANGUAGE_MAP = {
+    # Go SDK available — build in Go
+    "slack": ("go", "slack-go/slack"),
+    "discord": ("go", "bwmarrin/discordgo"),
+    "telegram": ("go", "go-telegram-bot-api/telegram-bot-api"),
+    "matrix": ("go", "mautrix/go"),
+    "mattermost": ("go", "mattermost/model"),
+    "irc": ("go", "thoj/go-ircevent"),
+    "twitch": ("go", "gempir/go-twitch-irc"),
+    "nostr": ("go", "nbd-wtf/go-nostr"),
+    "browser": ("go", "chromedp/chromedp"),
+    "magellan": ("go", "net/http"),
+    "gmail": ("go", "google.golang.org/api"),
+    "googlechat": ("go", "google.golang.org/api"),
+    "notion": ("go", "net/http (REST)"),
+
+    # TypeScript SDK only — use TypeScript runtime
+    "whatsapp": ("typescript", "@whiskeysockets/baileys"),
+    "bluebubbles": ("typescript", "bluebubbles-api"),
+    "line": ("typescript", "@line/bot-sdk"),
+    "feishu": ("typescript", "@larksuiteoapi/node-sdk"),
+    "xiaomi": ("typescript", "xiaomi-cloud"),
+
+    # Python SDK preferred
+    "signal": ("python", "signal-cli (Java CLI, Python wrapper)"),
+    "deepgram": ("python", "deepgram-sdk"),
+    "elevenlabs": ("python", "elevenlabs"),
+    "fal": ("python", "fal-client"),
+
+    # REST API — Go with net/http (no vendor SDK needed)
+    "msteams": ("go", "Microsoft Graph REST API"),
+    "brave": ("go", "REST API (net/http)"),
+    "duckduckgo": ("go", "REST API (net/http)"),
+    "tavily": ("go", "REST API (net/http)"),
+    "searxng": ("go", "REST API (net/http)"),
+    "firecrawl": ("go", "REST API (net/http)"),
+    "exa": ("go", "REST API (net/http)"),
+    "nextcloud-talk": ("go", "REST API (net/http)"),
+    "synology-chat": ("go", "Webhook API (net/http)"),
+    "zalo": ("go", "REST API (net/http)"),
+    "zalouser": ("go", "REST API (net/http)"),
+    "qqbot": ("go", "REST API (net/http)"),
+    "tlon": ("go", "REST API (net/http)"),
+    "voice-call": ("go", "WebRTC (pion/webrtc)"),
+
+    # macOS only
+    "imessage": ("go", "osascript bridge"),
+
+    # Device
+    "device-pair": ("go", "mDNS / Bluetooth"),
+    "phone-control": ("go", "ADB protocol"),
+
+    # Internal services
+    "image-generation-core": ("go", "internal"),
+    "media-understanding-core": ("go", "internal"),
+    "memory-core": ("go", "internal"),
+    "memory-lancedb": ("go", "internal"),
+    "speech-core": ("go", "internal"),
+    "talk-voice": ("go", "internal"),
+}
+
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -295,9 +360,12 @@ def generate_yaml(ext_id: str, ext_dir: Path) -> str:
     w(f"spec:")
 
     # Runtime
+    sdk_lang, sdk_pkg = SDK_LANGUAGE_MAP.get(ext_id, ("go", "net/http"))
     w(f"  runtime:")
     w(f"    type: docker")
     w(f"    language: go")
+    w(f"    sdk_language: {sdk_lang}")
+    w(f'    sdk_package: "{sdk_pkg}"')
     w(f"    docker:")
     w(f"      image: spark/connector-{ext_id}")
     w(f'      tag: "{version}"')

@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: typescript
+    sdk_package: "@whiskeysockets/baileys"
     docker:
       image: spark/connector-whatsapp
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50154
+        grpc: 50099
 
   auth:
     type: qr_code

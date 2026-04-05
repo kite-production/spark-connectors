@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: go
+    sdk_package: "mDNS / Bluetooth"
     docker:
       image: spark/connector-device-pair
       tag: "1.0.0"
       ports:
-        grpc: 50146
+        grpc: 50148
 
   auth:
     type: api_key

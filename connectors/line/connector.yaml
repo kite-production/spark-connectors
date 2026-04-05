@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: typescript
+    sdk_package: "@line/bot-sdk"
     docker:
       image: spark/connector-line
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50160
+        grpc: 50079
 
   auth:
     type: api_key

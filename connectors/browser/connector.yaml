@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: go
+    sdk_package: "chromedp/chromedp"
     docker:
       image: spark/connector-browser
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50085
+        grpc: 50115
 
   auth:
     type: api_key

@@ -29,11 +29,13 @@ spec:
   runtime:
     type: docker
     language: go
+    sdk_language: go
+    sdk_package: "REST API (net/http)"
     docker:
       image: spark/connector-zalouser
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50107
+        grpc: 50133
 
   auth:
     type: api_key
