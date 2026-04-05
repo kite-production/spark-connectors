@@ -1,91 +1,211 @@
-# Spark Connector Spec — whatsapp
-# Auto-generated from OpenClaw extension: whatsapp
+# Spark Connector Spec — WhatsApp
+# Generated from OpenClaw extension: whatsapp
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: whatsapp
-  name: "whatsapp"
+  name: "WhatsApp"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: chat
+  iconColor: "#25D366"
   description: >
     OpenClaw WhatsApp channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/whatsapp"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-whatsapp
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "baileys"
+    docker:
+      image: spark/connector-whatsapp
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50144
 
   auth:
-    type: api_key
+    type: qr_code
+    flow: interactive
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from WhatsApp"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: true
+    supports_documents: true
+    supports_threads: false
+    supports_reactions: true
+    supports_reply: true
+    supports_edit: true
+    supports_typing_indicator: true
+    supports_groups: true
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: allowed_vcard_key
-      display: "ALLOWED_VCARD_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: ALLOWED_VCARD_KEY"
-    - name: config_key
-      display: "CONFIG_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: CONFIG_KEY"
-    - name: default_main_key
-      display: "DEFAULT_MAIN_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: DEFAULT_MAIN_KEY"
-    - name: heartbeat_token
-      display: "HEARTBEAT_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: HEARTBEAT_TOKEN"
-    - name: message_content_key
-      display: "MESSAGE_CONTENT_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: MESSAGE_CONTENT_KEY"
-    - name: message_wrapper_key
-      display: "MESSAGE_WRAPPER_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: MESSAGE_WRAPPER_KEY"
-    - name: silent_reply_token
-      display: "SILENT_REPLY_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: SILENT_REPLY_TOKEN"
-    - name: whatsapp_active_listener_state_key
-      display: "WHATSAPP_ACTIVE_LISTENER_STATE_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: WHATSAPP_ACTIVE_LISTENER_STATE_KEY"
-    - name: whatsapp_legacy_outbound_send_dep_key
-      display: "WHATSAPP_LEGACY_OUTBOUND_SEND_DEP_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: WHATSAPP_LEGACY_OUTBOUND_SEND_DEP_KEY"
+    - name: "openclaw_oauth_dir"
+      display: "OPENCLAW_OAUTH_DIR"
+      type: text
+      required: false
+      description: "Environment variable: OPENCLAW_OAUTH_DIR"
+      group: advanced
+    - name: "openclaw_state_dir"
+      display: "OPENCLAW_STATE_DIR"
+      type: text
+      required: false
+      description: "Environment variable: OPENCLAW_STATE_DIR"
+      group: advanced
+    - name: "tmpdir"
+      display: "TMPDIR"
+      type: text
+      required: false
+      description: "Environment variable: TMPDIR"
+      group: advanced
 
   tools:
-    []
+    - name: "whatsapp-send-message"
+      method: POST
+      description: "Send a message via WhatsApp"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "whatsapp-list-messages"
+      method: GET
+      description: "List recent messages from WhatsApp"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to WhatsApp"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw whatsapp extension"
+
+  setup: |
+    ## WhatsApp Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "action-runtime-api.ts"
+    files:
+      - path: "action-runtime-api.ts"
+        language: typescript
+        size: 64
+      - path: "action-runtime.runtime.ts"
+        language: typescript
+        size: 64
+      - path: "api.ts"
+        language: typescript
+        size: 995
+      - path: "auth-presence.ts"
+        language: typescript
+        size: 2171
+      - path: "channel-config-api.ts"
+        language: typescript
+        size: 70
+      - path: "config-api.ts"
+        language: typescript
+        size: 113
+      - path: "constants.ts"
+        language: typescript
+        size: 73
+      - path: "contract-api.ts"
+        language: typescript
+        size: 2749
+      - path: "contract-surfaces.ts"
+        language: typescript
+        size: 1684
+      - path: "index.ts"
+        language: typescript
+        size: 469
+      - path: "light-runtime-api.ts"
+        language: typescript
+        size: 363
+      - path: "login-qr-api.ts"
+        language: typescript
+        size: 809
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 154
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 1174
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 253

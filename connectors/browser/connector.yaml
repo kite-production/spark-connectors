@@ -1,86 +1,183 @@
-# Spark Connector Spec — urowser
-# Auto-generated from OpenClaw extension: browser
+# Spark Connector Spec — Browser
+# Generated from OpenClaw extension: browser
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: browser
-  name: "urowser"
+  name: "Browser"
   type: tool
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "DevTools"
-  tags: ["utool"]
+  tags: ["Tool"]
   icon: language
+  iconColor: "#4285F4"
   description: >
     OpenClaw browser tool plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/browser"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-browser
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    docker:
+      image: spark/connector-browser
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50076
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: false
+    mode: none
+    description: "Action-only — invoked by agents on demand"
 
   config:
-    - name: cdp_port
-      display: "CDP_PORT"
+    - name: "all_proxy"
+      display: "ALL_PROXY"
       type: text
-      required: true
-      description: "Environment variable: CDP_PORT"
-    - name: cdp_url
-      display: "CDP_URL"
+      required: false
+      description: "Environment variable: ALL_PROXY"
+      group: advanced
+    - name: "https_proxy"
+      display: "HTTPS_PROXY"
       type: text
-      required: true
-      description: "Environment variable: CDP_URL"
-    - name: default_browser_control_port
-      display: "DEFAULT_BROWSER_CONTROL_PORT"
+      required: false
+      description: "Environment variable: HTTPS_PROXY"
+      group: advanced
+    - name: "http_proxy"
+      display: "HTTP_PROXY"
       type: text
-      required: true
-      description: "Environment variable: DEFAULT_BROWSER_CONTROL_PORT"
-    - name: legacy_browser_act_request_key
-      display: "LEGACY_BROWSER_ACT_REQUEST_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: LEGACY_BROWSER_ACT_REQUEST_KEY"
-    - name: missing_gw_token
+      required: false
+      description: "Environment variable: HTTP_PROXY"
+      group: advanced
+    - name: "localappdata"
+      display: "LOCALAPPDATA"
+      type: text
+      required: false
+      description: "Environment variable: LOCALAPPDATA"
+      group: advanced
+    - name: "missing_gw_token"
       display: "MISSING_GW_TOKEN"
       type: secret
       required: true
       description: "Environment variable: MISSING_GW_TOKEN"
-    - name: openclaw_gateway_port
-      display: "OPENCLAW_GATEWAY_PORT"
+      group: connection
+    - name: "no_proxy"
+      display: "NO_PROXY"
       type: text
+      required: false
+      description: "Environment variable: NO_PROXY"
+      group: advanced
+    - name: "openclaw_gateway_password"
+      display: "OPENCLAW_GATEWAY_PASSWORD"
+      type: secret
       required: true
+      description: "Environment variable: OPENCLAW_GATEWAY_PASSWORD"
+      group: advanced
+    - name: "openclaw_gateway_port"
+      display: "OPENCLAW_GATEWAY_PORT"
+      type: number
+      required: false
       description: "Environment variable: OPENCLAW_GATEWAY_PORT"
-    - name: openclaw_gateway_token
+      group: connection
+    - name: "openclaw_gateway_token"
       display: "OPENCLAW_GATEWAY_TOKEN"
       type: secret
       required: true
       description: "Environment variable: OPENCLAW_GATEWAY_TOKEN"
-    - name: openclaw_live_browser_cdp_url
+      group: connection
+    - name: "openclaw_live_browser_cdp_url"
       display: "OPENCLAW_LIVE_BROWSER_CDP_URL"
       type: text
-      required: true
+      required: false
       description: "Environment variable: OPENCLAW_LIVE_BROWSER_CDP_URL"
-    - name: proxy_env_key
-      display: "PROXY_ENV_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: PROXY_ENV_KEY"
-    - name: safe_non_network_url
-      display: "SAFE_NON_NETWORK_URL"
-      type: text
-      required: true
-      description: "Environment variable: SAFE_NON_NETWORK_URL"
+      group: connection
 
   tools:
     []
 
+  events:
+    []
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Browser"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw browser extension"
+
+  setup: |
+    ## Browser Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "browser-bridge.ts"
+    files:
+      - path: "browser-bridge.ts"
+        language: typescript
+        size: 169
+      - path: "browser-cdp.ts"
+        language: typescript
+        size: 61
+      - path: "browser-config.ts"
+        language: typescript
+        size: 754
+      - path: "browser-control-auth.ts"
+        language: typescript
+        size: 174
+      - path: "browser-runtime-api.ts"
+        language: typescript
+        size: 42
+      - path: "cli-metadata.ts"
+        language: typescript
+        size: 418
+      - path: "index.test.ts"
+        language: typescript
+        size: 2369
+      - path: "index.ts"
+        language: typescript
+        size: 1019
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 153
+      - path: "register.runtime.ts"
+        language: typescript
+        size: 272
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 549
+      - path: "test-support.ts"
+        language: typescript
+        size: 328

@@ -1,96 +1,253 @@
-# Spark Connector Spec — matrix
-# Auto-generated from OpenClaw extension: matrix
+# Spark Connector Spec — Matrix
+# Generated from OpenClaw extension: matrix
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: matrix
-  name: "matrix"
+  name: "Matrix"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: grid_view
+  iconColor: "#0DBD8B"
   description: >
     OpenClaw Matrix channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/matrix"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-matrix
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "matrix-sdk-crypto-nodejs"
+    docker:
+      image: spark/connector-matrix
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50153
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Matrix"
 
   capabilities:
+    supports_text: true
+    supports_images: true
+    supports_audio: false
+    supports_documents: false
     supports_threads: true
     supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
     supports_reply: true
-    supports_attachments: true
-    supports_images: true
+    supports_edit: true
+    supports_typing_indicator: true
+    supports_groups: true
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: access_token
+    - name: "access_token"
       display: "ACCESS_TOKEN"
       type: secret
       required: true
       description: "Environment variable: ACCESS_TOKEN"
-    - name: common_single_account_key
-      display: "COMMON_SINGLE_ACCOUNT_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: COMMON_SINGLE_ACCOUNT_KEY"
-    - name: default_account_key
-      display: "DEFAULT_ACCOUNT_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: DEFAULT_ACCOUNT_KEY"
-    - name: direct_account_data_queue_key
-      display: "DIRECT_ACCOUNT_DATA_QUEUE_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: DIRECT_ACCOUNT_DATA_QUEUE_KEY"
-    - name: d_prod_access_token
-      display: "D_PROD_ACCESS_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: D_PROD_ACCESS_TOKEN"
-    - name: f_prod_access_token
-      display: "F_PROD_ACCESS_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: F_PROD_ACCESS_TOKEN"
-    - name: matrix_access_token
+      group: connection
+    - name: "device_id"
+      display: "DEVICE_ID"
+      type: text
+      required: false
+      description: "Environment variable: DEVICE_ID"
+      group: advanced
+    - name: "matrix_access_token"
       display: "MATRIX_ACCESS_TOKEN"
       type: secret
       required: true
       description: "Environment variable: MATRIX_ACCESS_TOKEN"
-    - name: matrix_alerts_access_token
-      display: "MATRIX_ALERTS_ACCESS_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: MATRIX_ALERTS_ACCESS_TOKEN"
-    - name: matrix_default_access_token
+      group: connection
+    - name: "matrix_default_access_token"
       display: "MATRIX_DEFAULT_ACCESS_TOKEN"
       type: secret
       required: true
       description: "Environment variable: MATRIX_DEFAULT_ACCESS_TOKEN"
-    - name: matrix_env_key
-      display: "MATRIX_ENV_KEY"
+      group: connection
+    - name: "matrix_device_id"
+      display: "MATRIX_DEVICE_ID"
+      type: text
+      required: false
+      description: "Environment variable: MATRIX_DEVICE_ID"
+      group: advanced
+    - name: "matrix_homeserver"
+      display: "MATRIX_HOMESERVER"
+      type: text
+      required: false
+      description: "Environment variable: MATRIX_HOMESERVER"
+      group: advanced
+    - name: "matrix_ops_access_token"
+      display: "MATRIX_OPS_ACCESS_TOKEN"
       type: secret
       required: true
-      description: "Environment variable: MATRIX_ENV_KEY"
+      description: "Environment variable: MATRIX_OPS_ACCESS_TOKEN"
+      group: connection
+    - name: "matrix_ops_device_id"
+      display: "MATRIX_OPS_DEVICE_ID"
+      type: text
+      required: false
+      description: "Environment variable: MATRIX_OPS_DEVICE_ID"
+      group: advanced
+    - name: "matrix_ops_device_name"
+      display: "MATRIX_OPS_DEVICE_NAME"
+      type: text
+      required: false
+      description: "Environment variable: MATRIX_OPS_DEVICE_NAME"
+      group: advanced
+    - name: "matrix_ops_homeserver"
+      display: "MATRIX_OPS_HOMESERVER"
+      type: text
+      required: false
+      description: "Environment variable: MATRIX_OPS_HOMESERVER"
+      group: advanced
 
   tools:
-    []
+    - name: "matrix-send-message"
+      method: POST
+      description: "Send a message via Matrix"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "matrix-list-messages"
+      method: GET
+      description: "List recent messages from Matrix"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Matrix"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw matrix extension"
+
+  setup: |
+    ## Matrix Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 661
+      - path: "cli-metadata.ts"
+        language: typescript
+        size: 298
+      - path: "contract-api.ts"
+        language: typescript
+        size: 543
+      - path: "contract-surfaces.ts"
+        language: typescript
+        size: 248
+      - path: "helper-api.ts"
+        language: typescript
+        size: 119
+      - path: "index.test.ts"
+        language: typescript
+        size: 2183
+      - path: "index.ts"
+        language: typescript
+        size: 1831
+      - path: "legacy-crypto-inspector.ts"
+        language: typescript
+        size: 189
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 150
+      - path: "plugin-entry.handlers.runtime.ts"
+        language: typescript
+        size: 47
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 1872
+      - path: "runtime-heavy-api.ts"
+        language: typescript
+        size: 44
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 170
+      - path: "test-api.ts"
+        language: typescript
+        size: 102
+      - path: "thread-bindings-runtime.ts"
+        language: typescript
+        size: 151

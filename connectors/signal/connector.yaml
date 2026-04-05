@@ -1,51 +1,184 @@
-# Spark Connector Spec — signal
-# Auto-generated from OpenClaw extension: signal
+# Spark Connector Spec — Signal
+# Generated from OpenClaw extension: signal
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: signal
-  name: "signal"
+  name: "Signal"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: lock
+  iconColor: "#3A76F0"
   description: >
     OpenClaw Signal channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/signal"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-signal
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    docker:
+      image: spark/connector-signal
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50149
 
   auth:
-    type: api_key
+    type: device_token
+    flow: interactive
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Signal"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: false
+    supports_threads: false
+    supports_reactions: false
+    supports_reply: true
+    supports_edit: false
+    supports_typing_indicator: false
+    supports_groups: false
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: signal_base_url
-      display: "SIGNAL_BASE_URL"
-      type: text
-      required: true
-      description: "Environment variable: SIGNAL_BASE_URL"
+    []
 
   tools:
-    []
+    - name: "signal-send-message"
+      method: POST
+      description: "Send a message via Signal"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "signal-list-messages"
+      method: GET
+      description: "List recent messages from Signal"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Signal"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw signal extension"
+
+  setup: |
+    ## Signal Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 515
+      - path: "channel-config-api.ts"
+        language: typescript
+        size: 68
+      - path: "channel-entry.ts"
+        language: typescript
+        size: 459
+      - path: "config-api.ts"
+        language: typescript
+        size: 111
+      - path: "contract-api.ts"
+        language: typescript
+        size: 159
+      - path: "contract-surfaces.ts"
+        language: typescript
+        size: 51
+      - path: "index.ts"
+        language: typescript
+        size: 459
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 150
+      - path: "reaction-runtime-api.ts"
+        language: typescript
+        size: 145
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 38
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 255
+      - path: "test-api.ts"
+        language: typescript
+        size: 60

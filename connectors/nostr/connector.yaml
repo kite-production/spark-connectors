@@ -1,86 +1,181 @@
-# Spark Connector Spec — nostr
-# Auto-generated from OpenClaw extension: nostr
+# Spark Connector Spec — Nostr
+# Generated from OpenClaw extension: nostr
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: nostr
-  name: "nostr"
+  name: "Nostr"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: public
+  iconColor: "#8B5CF6"
   description: >
     OpenClaw Nostr channel plugin for NIP-04 encrypted DMs
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/nostr"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-nostr
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "nostr-tools"
+    docker:
+      image: spark/connector-nostr
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50121
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Nostr"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: false
+    supports_threads: false
+    supports_reactions: false
+    supports_reply: true
+    supports_edit: false
+    supports_typing_indicator: false
+    supports_groups: false
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: nostr_private_key
+    - name: "nostr_private_key"
       display: "NOSTR_PRIVATE_KEY"
       type: secret
       required: true
       description: "Environment variable: NOSTR_PRIVATE_KEY"
-    - name: rate_limit_max_tracked_key
-      display: "RATE_LIMIT_MAX_TRACKED_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: RATE_LIMIT_MAX_TRACKED_KEY"
-    - name: test_hex_private_key
-      display: "TEST_HEX_PRIVATE_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: TEST_HEX_PRIVATE_KEY"
-    - name: test_hex_public_key
-      display: "TEST_HEX_PUBLIC_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: TEST_HEX_PUBLIC_KEY"
-    - name: test_profile_relay_url
-      display: "TEST_PROFILE_RELAY_URL"
+      group: connection
+    - name: "openclaw_state_dir"
+      display: "OPENCLAW_STATE_DIR"
       type: text
-      required: true
-      description: "Environment variable: TEST_PROFILE_RELAY_URL"
-    - name: test_relay_url
-      display: "TEST_RELAY_URL"
-      type: text
-      required: true
-      description: "Environment variable: TEST_RELAY_URL"
-    - name: test_resolved_private_key
-      display: "TEST_RESOLVED_PRIVATE_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: TEST_RESOLVED_PRIVATE_KEY"
-    - name: test_setup_relay_url
-      display: "TEST_SETUP_RELAY_URL"
-      type: text
-      required: true
-      description: "Environment variable: TEST_SETUP_RELAY_URL"
+      required: false
+      description: "Environment variable: OPENCLAW_STATE_DIR"
+      group: advanced
 
   tools:
-    []
+    - name: "nostr-send-message"
+      method: POST
+      description: "Send a message via Nostr"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "nostr-list-messages"
+      method: GET
+      description: "List recent messages from Nostr"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Nostr"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw nostr extension"
+
+  setup: |
+    ## Nostr Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 34
+      - path: "index.ts"
+        language: typescript
+        size: 2136
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 148
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 174
+      - path: "setup-api.ts"
+        language: typescript
+        size: 78
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 168
+      - path: "test-api.ts"
+        language: typescript
+        size: 48

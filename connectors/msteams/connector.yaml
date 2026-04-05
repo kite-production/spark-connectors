@@ -1,96 +1,193 @@
-# Spark Connector Spec — msteams
-# Auto-generated from OpenClaw extension: msteams
+# Spark Connector Spec — Microsoft Teams
+# Generated from OpenClaw extension: msteams
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: msteams
-  name: "msteams"
+  name: "Microsoft Teams"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: groups
+  iconColor: "#6264A7"
   description: >
     OpenClaw Microsoft Teams channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/msteams"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-msteams
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "teams.api"
+    docker:
+      image: spark/connector-msteams
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50129
 
   auth:
-    type: api_key
+    type: oauth2
+    flow: interactive
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Microsoft Teams"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: true
+    supports_threads: true
+    supports_reactions: true
+    supports_reply: true
+    supports_edit: true
+    supports_typing_indicator: false
+    supports_groups: true
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: default_message_url
-      display: "DEFAULT_MESSAGE_URL"
+    - name: "msteams_app_id"
+      display: "MSTEAMS_APP_ID"
       type: text
-      required: true
-      description: "Environment variable: DEFAULT_MESSAGE_URL"
-    - name: default_share_reference_url
-      display: "DEFAULT_SHARE_REFERENCE_URL"
-      type: text
-      required: true
-      description: "Environment variable: DEFAULT_SHARE_REFERENCE_URL"
-    - name: graph_shares_url
-      display: "GRAPH_SHARES_URL"
-      type: text
-      required: true
-      description: "Environment variable: GRAPH_SHARES_URL"
-    - name: graph_url
-      display: "GRAPH_URL"
-      type: text
-      required: true
-      description: "Environment variable: GRAPH_URL"
-    - name: msteams_sent_messages_key
-      display: "MSTEAMS_SENT_MESSAGES_KEY"
+      required: false
+      description: "Environment variable: MSTEAMS_APP_ID"
+      group: advanced
+    - name: "msteams_app_password"
+      display: "MSTEAMS_APP_PASSWORD"
       type: secret
       required: true
-      description: "Environment variable: MSTEAMS_SENT_MESSAGES_KEY"
-    - name: plugin_dependencies_metadata_key
-      display: "PLUGIN_DEPENDENCIES_METADATA_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: PLUGIN_DEPENDENCIES_METADATA_KEY"
-    - name: plugin_events_metadata_key
-      display: "PLUGIN_EVENTS_METADATA_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: PLUGIN_EVENTS_METADATA_KEY"
-    - name: plugin_metadata_key
-      display: "PLUGIN_METADATA_KEY"
-      type: secret
-      required: true
-      description: "Environment variable: PLUGIN_METADATA_KEY"
-    - name: silent_reply_token
-      display: "SILENT_REPLY_TOKEN"
-      type: secret
-      required: true
-      description: "Environment variable: SILENT_REPLY_TOKEN"
-    - name: test_url
-      display: "TEST_URL"
+      description: "Environment variable: MSTEAMS_APP_PASSWORD"
+      group: advanced
+    - name: "msteams_tenant_id"
+      display: "MSTEAMS_TENANT_ID"
       type: text
-      required: true
-      description: "Environment variable: TEST_URL"
+      required: false
+      description: "Environment variable: MSTEAMS_TENANT_ID"
+      group: advanced
 
   tools:
-    []
+    - name: "msteams-send-message"
+      method: POST
+      description: "Send a message via Microsoft Teams"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "msteams-list-messages"
+      method: GET
+      description: "List recent messages from Microsoft Teams"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Microsoft Teams"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw msteams extension"
+
+  setup: |
+    ## Microsoft Teams Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 77
+      - path: "channel-config-api.ts"
+        language: typescript
+        size: 69
+      - path: "config-api.ts"
+        language: typescript
+        size: 112
+      - path: "contract-surfaces.ts"
+        language: typescript
+        size: 110
+      - path: "index.ts"
+        language: typescript
+        size: 492
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 152
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 186
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 172
+      - path: "test-api.ts"
+        language: typescript
+        size: 50

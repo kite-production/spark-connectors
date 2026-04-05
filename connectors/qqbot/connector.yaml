@@ -1,131 +1,265 @@
-# Spark Connector Spec — qquot
-# Auto-generated from OpenClaw extension: qqbot
+# Spark Connector Spec — QQ Bot
+# Generated from OpenClaw extension: qqbot
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: qqbot
-  name: "qquot"
+  name: "QQ Bot"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: smart_toy
+  iconColor: "#12B7F5"
   description: >
     OpenClaw QQ Bot channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/qqbot"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-qqbot
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "mpg123-decoder"
+    docker:
+      image: spark/connector-qqbot
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50098
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from QQ Bot"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: false
+    supports_threads: false
+    supports_reactions: false
+    supports_reply: true
+    supports_edit: false
+    supports_typing_indicator: false
+    supports_groups: false
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: enabled
+    - name: "enabled"
       display: "enabled"
-      type: text
+      type: boolean
       required: false
       description: "enabled"
-    - name: name
+      group: connection
+    - name: "name"
       display: "name"
       type: text
       required: false
       description: "name"
-    - name: appId
+      group: connection
+    - name: "appId"
       display: "appId"
       type: text
       required: false
       description: "appId"
-    - name: clientSecret
+      group: connection
+    - name: "clientSecret"
       display: "clientSecret"
-      type: text
-      required: false
+      type: secret
+      required: true
       description: "clientSecret"
-    - name: clientSecretFile
+      group: connection
+    - name: "clientSecretFile"
       display: "clientSecretFile"
-      type: text
-      required: false
+      type: secret
+      required: true
       description: "clientSecretFile"
-    - name: allowFrom
+      group: connection
+    - name: "allowFrom"
       display: "allowFrom"
       type: text
       required: false
       description: "allowFrom"
-    - name: systemPrompt
+      group: connection
+    - name: "systemPrompt"
       display: "systemPrompt"
       type: text
       required: false
       description: "systemPrompt"
-    - name: markdownSupport
+      group: connection
+    - name: "markdownSupport"
       display: "markdownSupport"
-      type: text
+      type: boolean
       required: false
       description: "markdownSupport"
-    - name: voiceDirectUploadFormats
+      group: connection
+    - name: "voiceDirectUploadFormats"
       display: "voiceDirectUploadFormats"
       type: text
       required: false
       description: "voiceDirectUploadFormats"
-    - name: audioFormatPolicy
+      group: connection
+    - name: "audioFormatPolicy"
       display: "audioFormatPolicy"
       type: text
       required: false
       description: "audioFormatPolicy"
-    - name: tts
+      group: connection
+    - name: "tts"
       display: "tts"
       type: text
       required: false
       description: "tts"
-    - name: stt
+      group: connection
+    - name: "stt"
       display: "stt"
       type: text
       required: false
       description: "stt"
-    - name: urlDirectUpload
+      group: connection
+    - name: "urlDirectUpload"
       display: "urlDirectUpload"
-      type: text
+      type: boolean
       required: false
       description: "urlDirectUpload"
-    - name: upgradeUrl
+      group: connection
+    - name: "upgradeUrl"
       display: "upgradeUrl"
       type: text
       required: false
       description: "upgradeUrl"
-    - name: upgradeMode
+      group: connection
+    - name: "upgradeMode"
       display: "upgradeMode"
       type: text
       required: false
       description: "upgradeMode"
-    - name: accounts
+      group: connection
+    - name: "accounts"
       display: "accounts"
       type: text
       required: false
       description: "accounts"
-    - name: defaultAccount
+      group: connection
+    - name: "defaultAccount"
       display: "defaultAccount"
       type: text
       required: false
       description: "defaultAccount"
+      group: connection
 
   tools:
-    []
+    - name: "qqbot-send-message"
+      method: POST
+      description: "Send a message via QQ Bot"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "qqbot-list-messages"
+      method: GET
+      description: "List recent messages from QQ Bot"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to QQ Bot"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw qqbot extension"
+
+  setup: |
+    ## QQ Bot Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 136
+      - path: "index.ts"
+        language: typescript
+        size: 4574
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 4183
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 442
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 244

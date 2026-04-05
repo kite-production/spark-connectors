@@ -1,196 +1,352 @@
-# Spark Connector Spec — voice call
-# Auto-generated from OpenClaw extension: voice-call
+# Spark Connector Spec — Voice Call
+# Generated from OpenClaw extension: voice-call
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: voice-call
-  name: "voice call"
+  name: "Voice Call"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: call
+  iconColor: "#7bdc7b"
   description: >
     OpenClaw voice-call plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/voice-call"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-voice-call
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "typebox"
+    docker:
+      image: spark/connector-voice-call
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50091
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Voice Call"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: false
+    supports_threads: false
+    supports_reactions: false
+    supports_reply: true
+    supports_edit: false
+    supports_typing_indicator: false
+    supports_groups: false
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: enabled
+    - name: "enabled"
       display: "enabled"
-      type: text
+      type: boolean
       required: false
       description: "enabled"
-    - name: provider
+      group: connection
+    - name: "provider"
       display: "provider"
       type: text
       required: false
       description: "provider"
-    - name: telnyx
+      group: connection
+    - name: "telnyx"
       display: "telnyx"
       type: text
       required: false
       description: "telnyx"
-    - name: twilio
+      group: connection
+    - name: "twilio"
       display: "twilio"
       type: text
       required: false
       description: "twilio"
-    - name: plivo
+      group: connection
+    - name: "plivo"
       display: "plivo"
       type: text
       required: false
       description: "plivo"
-    - name: fromNumber
+      group: connection
+    - name: "fromNumber"
       display: "fromNumber"
       type: text
       required: false
       description: "fromNumber"
-    - name: toNumber
+      group: connection
+    - name: "toNumber"
       display: "toNumber"
       type: text
       required: false
       description: "toNumber"
-    - name: inboundPolicy
+      group: connection
+    - name: "inboundPolicy"
       display: "inboundPolicy"
       type: text
       required: false
       description: "inboundPolicy"
-    - name: allowFrom
+      group: connection
+    - name: "allowFrom"
       display: "allowFrom"
       type: text
       required: false
       description: "allowFrom"
-    - name: inboundGreeting
+      group: connection
+    - name: "inboundGreeting"
       display: "inboundGreeting"
       type: text
       required: false
       description: "inboundGreeting"
-    - name: outbound
+      group: connection
+    - name: "outbound"
       display: "outbound"
       type: text
       required: false
       description: "outbound"
-    - name: maxDurationSeconds
+      group: connection
+    - name: "maxDurationSeconds"
       display: "maxDurationSeconds"
       type: text
       required: false
       description: "maxDurationSeconds"
-    - name: staleCallReaperSeconds
+      group: advanced
+    - name: "staleCallReaperSeconds"
       display: "staleCallReaperSeconds"
       type: text
       required: false
       description: "staleCallReaperSeconds"
-    - name: silenceTimeoutMs
+      group: connection
+    - name: "silenceTimeoutMs"
       display: "silenceTimeoutMs"
       type: text
       required: false
       description: "silenceTimeoutMs"
-    - name: transcriptTimeoutMs
+      group: advanced
+    - name: "transcriptTimeoutMs"
       display: "transcriptTimeoutMs"
       type: text
       required: false
       description: "transcriptTimeoutMs"
-    - name: ringTimeoutMs
+      group: advanced
+    - name: "ringTimeoutMs"
       display: "ringTimeoutMs"
       type: text
       required: false
       description: "ringTimeoutMs"
-    - name: maxConcurrentCalls
+      group: advanced
+    - name: "maxConcurrentCalls"
       display: "maxConcurrentCalls"
       type: text
       required: false
       description: "maxConcurrentCalls"
-    - name: serve
+      group: advanced
+    - name: "serve"
       display: "serve"
       type: text
       required: false
       description: "serve"
-    - name: tailscale
+      group: connection
+    - name: "tailscale"
       display: "tailscale"
       type: text
       required: false
       description: "tailscale"
-    - name: tunnel
+      group: connection
+    - name: "tunnel"
       display: "tunnel"
       type: text
       required: false
       description: "tunnel"
-    - name: webhookSecurity
+      group: connection
+    - name: "webhookSecurity"
       display: "webhookSecurity"
       type: text
       required: false
       description: "webhookSecurity"
-    - name: streaming
+      group: connection
+    - name: "streaming"
       display: "streaming"
       type: text
       required: false
       description: "streaming"
-    - name: realtime
+      group: advanced
+    - name: "realtime"
       display: "realtime"
       type: text
       required: false
       description: "realtime"
-    - name: publicUrl
+      group: connection
+    - name: "publicUrl"
       display: "publicUrl"
       type: text
       required: false
       description: "publicUrl"
-    - name: skipSignatureVerification
+      group: connection
+    - name: "skipSignatureVerification"
       display: "skipSignatureVerification"
-      type: text
+      type: boolean
       required: false
       description: "skipSignatureVerification"
-    - name: tts
+      group: connection
+    - name: "tts"
       display: "tts"
       type: text
       required: false
       description: "tts"
-    - name: store
+      group: connection
+    - name: "store"
       display: "store"
       type: text
       required: false
       description: "store"
-    - name: responseModel
+      group: connection
+    - name: "responseModel"
       display: "responseModel"
       type: text
       required: false
       description: "responseModel"
-    - name: responseSystemPrompt
+      group: connection
+    - name: "responseSystemPrompt"
       display: "responseSystemPrompt"
       type: text
       required: false
       description: "responseSystemPrompt"
-    - name: responseTimeoutMs
+      group: connection
+    - name: "responseTimeoutMs"
       display: "responseTimeoutMs"
       type: text
       required: false
       description: "responseTimeoutMs"
+      group: advanced
 
   tools:
-    []
+    - name: "voice-call-send-message"
+      method: POST
+      description: "Send a message via Voice Call"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "voice-call-list-messages"
+      method: GET
+      description: "List recent messages from Voice Call"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Voice Call"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw voice-call extension"
+
+  setup: |
+    ## Voice Call Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 34
+      - path: "cli-metadata.ts"
+        language: typescript
+        size: 271
+      - path: "config-api.ts"
+        language: typescript
+        size: 474
+      - path: "index.test.ts"
+        language: typescript
+        size: 8428
+      - path: "index.ts"
+        language: typescript
+        size: 19638
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 18340
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 184
+      - path: "runtime-entry.ts"
+        language: typescript
+        size: 82

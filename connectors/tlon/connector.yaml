@@ -1,51 +1,170 @@
-# Spark Connector Spec — tlon
-# Auto-generated from OpenClaw extension: tlon
+# Spark Connector Spec — Tlon
+# Generated from OpenClaw extension: tlon
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: tlon
-  name: "tlon"
+  name: "Tlon"
   type: channel
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["uchannel"]
+  tags: ["Channel"]
   icon: language
+  iconColor: "#000000"
   description: >
     OpenClaw Tlon/Urbit channel plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/tlon"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-tlon
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    framework: "client-s3"
+    docker:
+      image: spark/connector-tlon
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50147
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: true
+    mode: push
+    description: "Receives messages from Tlon"
 
   capabilities:
-    supports_threads: true
-    supports_reactions: false
-    supports_edit: false
-    supports_unsend: false
-    supports_reply: true
-    supports_attachments: true
+    supports_text: true
     supports_images: true
+    supports_audio: false
+    supports_documents: false
+    supports_threads: false
+    supports_reactions: false
+    supports_reply: true
+    supports_edit: false
+    supports_typing_indicator: false
+    supports_groups: false
     max_message_length: 4096
+    supported_media_types:
+      - "image/jpeg"
+      - "image/png"
 
   config:
-    - name: memex_base_url
-      display: "MEMEX_BASE_URL"
-      type: text
-      required: true
-      description: "Environment variable: MEMEX_BASE_URL"
+    []
 
   tools:
-    []
+    - name: "tlon-send-message"
+      method: POST
+      description: "Send a message via Tlon"
+      category: messaging
+      args:
+        - name: to
+          type: string
+          description: "Recipient ID or channel"
+          required: true
+        - name: text
+          type: string
+          description: "Message content"
+          required: true
+      returns:
+        type: object
+        properties:
+          message_id: { type: string }
+    - name: "tlon-list-messages"
+      method: GET
+      description: "List recent messages from Tlon"
+      category: query
+      args:
+        - name: chat_id
+          type: string
+          required: true
+        - name: limit
+          type: number
+          required: false
+          default: "50"
+      returns:
+        type: array
+        description: "List of messages"
+
+  events:
+    - name: message.received
+      description: "New message received"
+      payload:
+        message_id: string
+        chat_id: string
+        sender: string
+        text: string
+        timestamp: string
+    - name: connection.status
+      description: "Connection state changed"
+      payload:
+        status: string
+        reason: string
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to Tlon"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+    optional: ["minio"]
 
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw tlon extension"
+
+  setup: |
+    ## Tlon Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "api.ts"
+    files:
+      - path: "api.ts"
+        language: typescript
+        size: 34
+      - path: "index.ts"
+        language: typescript
+        size: 4593
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 197
+      - path: "runtime-api.ts"
+        language: typescript
+        size: 172
+      - path: "setup-api.ts"
+        language: typescript
+        size: 114
+      - path: "setup-entry.ts"
+        language: typescript
+        size: 166
+      - path: "test-api.ts"
+        language: typescript
+        size: 47

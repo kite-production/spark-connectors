@@ -1,46 +1,111 @@
-# Spark Connector Spec — fal
-# Auto-generated from OpenClaw extension: fal
+# Spark Connector Spec — FAL
+# Generated from OpenClaw extension: fal
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA
 metadata:
   id: fal
-  name: "fal"
+  name: "FAL"
   type: service
   version: "2026.4.1-beta.1"
-  publisher: "OpenClaw Community"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Services"
-  tags: ["uservice"]
+  tags: ["Service"]
   icon: image
+  iconColor: "#6366F1"
   description: >
     OpenClaw fal provider plugin
-  source: "https://github.com/openclaw/openclaw/tree/main/extensions/fal"
   license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC
 spec:
-  docker:
-    image: spark/connector-fal
-    tag: "2026.4.1-beta.1"
+  runtime:
+    type: docker
+    language: typescript
+    docker:
+      image: spark/connector-fal
+      tag: "2026.4.1-beta.1"
+      ports:
+        grpc: 50132
 
   auth:
     type: api_key
+    flow: automatic
+
+  ingestion:
+    enabled: false
+    mode: none
+    description: "Service connector — provides capabilities to agents"
 
   config:
-    - name: default_fal_base_url
-      display: "DEFAULT_FAL_BASE_URL"
-      type: text
-      required: true
-      description: "Environment variable: DEFAULT_FAL_BASE_URL"
-    - name: fal_key
+    - name: "fal_key"
       display: "FAL_KEY"
       type: secret
       required: true
       description: "Environment variable: FAL_KEY"
+      group: connection
 
   tools:
     []
 
+  events:
+    []
+
+  health:
+    endpoint: "/health"
+    interval: 15s
+    timeout: 5s
+    unhealthy_threshold: 3
+    test:
+      endpoint: "/test"
+      description: "Verify connectivity to FAL"
+      timeout: 10s
+      expected_status: 200
+
+  dependencies:
+    services: ["nats", "control-plane"]
+
   versions:
     - version: "2026.4.1-beta.1"
-      date: "2026-04-04"
+      date: "2026-04-05"
+      breaking: false
       changes:
-        - "Auto-generated from OpenClaw extension"
+        - "Initial Spark marketplace release"
+        - "Adapted from OpenClaw fal extension"
+
+  setup: |
+    ## FAL Connector Setup
+    1. Install the connector from the Spark Marketplace
+    2. Create an instance in your workspace
+    3. Configure the required parameters
+    4. Click 'Test Connection' to verify
+    5. Enable the connector for your agents
+
+  code:
+    entrypoint: "image-generation-provider.test.ts"
+    files:
+      - path: "image-generation-provider.test.ts"
+        language: typescript
+        size: 12470
+      - path: "image-generation-provider.ts"
+        language: typescript
+        size: 12590
+      - path: "index.ts"
+        language: typescript
+        size: 1553
+      - path: "onboard.ts"
+        language: typescript
+        size: 509
+      - path: "openclaw.plugin.json"
+        language: json
+        size: 739
+      - path: "test-api.ts"
+        language: typescript
+        size: 82
