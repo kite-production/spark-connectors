@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-zalouser
+      image: ghcr.io/kite-production/connector-zalouser
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50133
+        grpc: 50145
 
   auth:
     type: api_key

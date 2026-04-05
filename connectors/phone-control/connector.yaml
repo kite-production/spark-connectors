@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "ADB protocol"
     docker:
-      image: spark/connector-phone-control
+      image: ghcr.io/kite-production/connector-phone-control
       tag: "1.0.0"
       ports:
-        grpc: 50099
+        grpc: 50120
 
   auth:
     type: api_key

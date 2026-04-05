@@ -32,10 +32,10 @@ spec:
     sdk_language: typescript
     sdk_package: "bluebubbles-api"
     docker:
-      image: spark/connector-bluebubbles
+      image: ghcr.io/kite-production/connector-bluebubbles
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50077
+        grpc: 50166
 
   auth:
     type: api_key

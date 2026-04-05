@@ -32,10 +32,10 @@ spec:
     sdk_language: typescript
     sdk_package: "@line/bot-sdk"
     docker:
-      image: spark/connector-line
+      image: ghcr.io/kite-production/connector-line
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50079
+        grpc: 50158
 
   auth:
     type: api_key

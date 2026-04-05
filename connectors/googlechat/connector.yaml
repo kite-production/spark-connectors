@@ -32,10 +32,11 @@ spec:
     sdk_language: go
     sdk_package: "google.golang.org/api"
     docker:
-      image: spark/connector-googlechat
+      image: ghcr.io/kite-production/connector-googlechat
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
-        grpc: 50154
+        grpc: 50112
 
   auth:
     type: oauth2

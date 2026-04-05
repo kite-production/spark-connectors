@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "osascript bridge"
     docker:
-      image: spark/connector-imessage
+      image: ghcr.io/kite-production/connector-imessage
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50167
+        grpc: 50140
 
   auth:
     type: none

@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-duckduckgo
+      image: ghcr.io/kite-production/connector-duckduckgo
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50162
+        grpc: 50086
 
   auth:
     type: api_key

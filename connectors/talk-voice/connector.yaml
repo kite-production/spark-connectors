@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "internal"
     docker:
-      image: spark/connector-talk-voice
+      image: ghcr.io/kite-production/connector-talk-voice
       tag: "1.0.0"
       ports:
-        grpc: 50102
+        grpc: 50107
 
   auth:
     type: api_key

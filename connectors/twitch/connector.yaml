@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "gempir/go-twitch-irc"
     docker:
-      image: spark/connector-twitch
+      image: ghcr.io/kite-production/connector-twitch
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50147
+        grpc: 50145
 
   auth:
     type: oauth2

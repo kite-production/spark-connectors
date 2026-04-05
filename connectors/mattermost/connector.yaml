@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "mattermost/model"
     docker:
-      image: spark/connector-mattermost
+      image: ghcr.io/kite-production/connector-mattermost
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50153
+        grpc: 50095
 
   auth:
     type: api_key

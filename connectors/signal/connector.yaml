@@ -32,10 +32,10 @@ spec:
     sdk_language: python
     sdk_package: "signal-cli (Java CLI, Python wrapper)"
     docker:
-      image: spark/connector-signal
+      image: ghcr.io/kite-production/connector-signal
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50083
+        grpc: 50078
 
   auth:
     type: device_token

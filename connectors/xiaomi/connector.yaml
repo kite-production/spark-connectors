@@ -32,10 +32,10 @@ spec:
     sdk_language: typescript
     sdk_package: "xiaomi-cloud"
     docker:
-      image: spark/connector-xiaomi
+      image: ghcr.io/kite-production/connector-xiaomi
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50078
+        grpc: 50163
 
   auth:
     type: api_key

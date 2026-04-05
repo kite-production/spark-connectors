@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-tlon
+      image: ghcr.io/kite-production/connector-tlon
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50123
+        grpc: 50118
 
   auth:
     type: api_key

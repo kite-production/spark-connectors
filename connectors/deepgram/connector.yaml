@@ -32,10 +32,10 @@ spec:
     sdk_language: python
     sdk_package: "deepgram-sdk"
     docker:
-      image: spark/connector-deepgram
+      image: ghcr.io/kite-production/connector-deepgram
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50088
+        grpc: 50165
 
   auth:
     type: api_key

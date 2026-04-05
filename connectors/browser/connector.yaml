@@ -32,10 +32,11 @@ spec:
     sdk_language: go
     sdk_package: "chromedp/chromedp"
     docker:
-      image: spark/connector-browser
+      image: ghcr.io/kite-production/connector-browser
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
-        grpc: 50115
+        grpc: 50094
 
   auth:
     type: api_key

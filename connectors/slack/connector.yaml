@@ -32,10 +32,11 @@ spec:
     sdk_language: go
     sdk_package: "slack-go/slack"
     docker:
-      image: spark/connector-slack
+      image: ghcr.io/kite-production/connector-slack
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
-        grpc: 50112
+        grpc: 50109
 
   auth:
     type: oauth2

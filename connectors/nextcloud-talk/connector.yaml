@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-nextcloud-talk
+      image: ghcr.io/kite-production/connector-nextcloud-talk
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50107
+        grpc: 50147
 
   auth:
     type: api_key

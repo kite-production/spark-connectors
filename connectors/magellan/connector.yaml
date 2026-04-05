@@ -28,7 +28,7 @@ metadata:
 spec:
   # Docker image for the connector service
   docker:
-    image: spark/connector-magellan
+    image: ghcr.io/kite-production/connector-magellan
     tag: "1.0.0"
     ports:
       grpc: 50066

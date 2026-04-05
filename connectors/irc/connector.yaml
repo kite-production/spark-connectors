@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "thoj/go-ircevent"
     docker:
-      image: spark/connector-irc
+      image: ghcr.io/kite-production/connector-irc
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50125
+        grpc: 50078
 
   auth:
     type: api_key

@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "internal"
     docker:
-      image: spark/connector-image-generation-core
+      image: ghcr.io/kite-production/connector-image-generation-core
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50154
+        grpc: 50118
 
   auth:
     type: api_key

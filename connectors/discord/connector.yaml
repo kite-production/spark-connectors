@@ -32,10 +32,11 @@ spec:
     sdk_language: go
     sdk_package: "bwmarrin/discordgo"
     docker:
-      image: spark/connector-discord
+      image: ghcr.io/kite-production/connector-discord
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
-        grpc: 50070
+        grpc: 50082
 
   auth:
     type: api_key

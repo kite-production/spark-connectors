@@ -32,10 +32,10 @@ spec:
     sdk_language: typescript
     sdk_package: "@larksuiteoapi/node-sdk"
     docker:
-      image: spark/connector-feishu
+      image: ghcr.io/kite-production/connector-feishu
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50157
+        grpc: 50110
 
   auth:
     type: api_key

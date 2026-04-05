@@ -32,8 +32,9 @@ spec:
     sdk_language: go
     sdk_package: "Microsoft Graph REST API"
     docker:
-      image: spark/connector-msteams
+      image: ghcr.io/kite-production/connector-msteams
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
         grpc: 50161
 

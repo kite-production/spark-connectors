@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-tavily
+      image: ghcr.io/kite-production/connector-tavily
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50157
+        grpc: 50150
 
   auth:
     type: api_key

@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "WebRTC (pion/webrtc)"
     docker:
-      image: spark/connector-voice-call
+      image: ghcr.io/kite-production/connector-voice-call
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50070
+        grpc: 50102
 
   auth:
     type: api_key

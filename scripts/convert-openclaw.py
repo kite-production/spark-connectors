@@ -367,7 +367,7 @@ def generate_yaml(ext_id: str, ext_dir: Path) -> str:
     w(f"    sdk_language: {sdk_lang}")
     w(f'    sdk_package: "{sdk_pkg}"')
     w(f"    docker:")
-    w(f"      image: spark/connector-{ext_id}")
+    w(f"      image: ghcr.io/kite-production/connector-{ext_id}")
     w(f'      tag: "{version}"')
     grpc_port = 50070 + hash(ext_id) % 100
     w(f"      ports:")

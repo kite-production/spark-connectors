@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "mautrix/go"
     docker:
-      image: spark/connector-matrix
+      image: ghcr.io/kite-production/connector-matrix
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50076
+        grpc: 50104
 
   auth:
     type: api_key

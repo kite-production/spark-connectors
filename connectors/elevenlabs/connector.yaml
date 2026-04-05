@@ -32,10 +32,10 @@ spec:
     sdk_language: python
     sdk_package: "elevenlabs"
     docker:
-      image: spark/connector-elevenlabs
+      image: ghcr.io/kite-production/connector-elevenlabs
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50120
+        grpc: 50107
 
   auth:
     type: api_key

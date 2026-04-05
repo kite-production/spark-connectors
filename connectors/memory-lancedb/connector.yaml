@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "internal"
     docker:
-      image: spark/connector-memory-lancedb
+      image: ghcr.io/kite-production/connector-memory-lancedb
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50073
+        grpc: 50101
 
   auth:
     type: api_key

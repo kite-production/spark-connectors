@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "Webhook API (net/http)"
     docker:
-      image: spark/connector-synology-chat
+      image: ghcr.io/kite-production/connector-synology-chat
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50090
+        grpc: 50159
 
   auth:
     type: api_key

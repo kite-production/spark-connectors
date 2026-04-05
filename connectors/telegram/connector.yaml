@@ -32,10 +32,11 @@ spec:
     sdk_language: go
     sdk_package: "go-telegram-bot-api/telegram-bot-api"
     docker:
-      image: spark/connector-telegram
+      image: ghcr.io/kite-production/connector-telegram
       tag: "2026.4.1-beta.1"
+      image_available: true
       ports:
-        grpc: 50117
+        grpc: 50136
 
   auth:
     type: api_key

@@ -32,10 +32,10 @@ spec:
     sdk_language: go
     sdk_package: "REST API (net/http)"
     docker:
-      image: spark/connector-exa
+      image: ghcr.io/kite-production/connector-exa
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50127
+        grpc: 50099
 
   auth:
     type: api_key

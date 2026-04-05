@@ -32,10 +32,10 @@ spec:
     sdk_language: python
     sdk_package: "fal-client"
     docker:
-      image: spark/connector-fal
+      image: ghcr.io/kite-production/connector-fal
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50131
+        grpc: 50162
 
   auth:
     type: api_key

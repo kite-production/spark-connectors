@@ -32,10 +32,10 @@ spec:
     sdk_language: typescript
     sdk_package: "@whiskeysockets/baileys"
     docker:
-      image: spark/connector-whatsapp
+      image: ghcr.io/kite-production/connector-whatsapp
       tag: "2026.4.1-beta.1"
       ports:
-        grpc: 50099
+        grpc: 50084
 
   auth:
     type: qr_code
