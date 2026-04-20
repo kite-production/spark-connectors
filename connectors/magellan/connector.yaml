@@ -1,45 +1,69 @@
 # Spark Connector Spec — Magellan (Venus Bridge)
-# Named after NASA's Venus-mapping spacecraft (1989-1994)
+# Named after NASA's Venus-mapping spacecraft (1989-1994).
+#
+# Architecture: magellan is a tool-only on-demand connector. Each
+# tool call spawns a fresh Docker container from ghcr.io/kite-
+# production/connector-magellan, runs the tool against Venus, prints
+# JSON to stdout, and exits.
+#
+# The webhook/NATS inbound path (Venus → Spark routing) is NOT
+# handled by this image — it lives in a separate always-on service
+# called `venus-bridge` in the Spark repo (services/venus-bridge/).
+# That service maintains a persistent HTTP (and, soon, WebSocket)
+# connection to Venus for inbound events.
 apiVersion: spark.dev/v1
 kind: Connector
+
+# ── METADATA ────────────────────────────────────────────────────────
 metadata:
   id: magellan
   name: "Venus (Magellan)"
-  version: "1.0.0"
-  publisher: "Spark Official"
+  type: messaging
+  version: "2.0.0"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
   category: "Communication"
-  tags: ["Testing", "Internal", "Development"]
+  tags: ["Testing", "Internal", "Development", "Built-in"]
   icon: science
+  iconColor: "#45ffd6"
   description: >
-    Built-in test messaging service for smoke testing agent workflows
-    without external dependencies. Uses the Venus in-memory messaging
-    service with channel, thread, and webhook support.
+    Built-in test messaging service for smoke-testing agent
+    workflows without external dependencies. Exposes six tools
+    for channel, message, and webhook operations against the
+    Venus in-memory messaging service.
   longDescription: >
-    Venus is a lightweight, in-memory messaging service built for the
-    Spark platform. The Magellan connector bridges Venus channels to
-    Spark agents via NATS. Ideal for development, CI/CD smoke tests,
-    and demo environments. Supports channels, threads, webhooks, and
-    WebSocket streams. No external accounts or API keys from third
-    parties required.
+    Venus is a lightweight, in-memory messaging service used as a
+    development and CI/CD substitute for real chat integrations
+    like Slack or Discord. The Magellan connector lets Spark agents
+    interact with Venus through six tools — send messages, list
+    history, create channels, register webhooks, and query status.
+
+    This connector runs as an on-demand container: connector-manager
+    spawns a fresh instance per tool call, runs the tool, collects
+    the JSON response from stdout, and removes the container.
+    Inbound chat (Venus → agent) is handled separately by the
+    venus-bridge service in the Spark platform.
   license: MIT
   homepage: https://github.com/kite-production/spark
   repository: https://github.com/kite-production/spark-connectors
 
+# ── SPEC ────────────────────────────────────────────────────────────
 spec:
-  # Docker image for the connector service
-  docker:
-    image: ghcr.io/kite-production/connector-magellan
-    tag: "1.0.0"
-    ports:
-      grpc: 50066
-      webhook: 8091
+  runtime:
+    type: docker
+    language: go
+    execution_mode: on_demand
+    docker:
+      image: ghcr.io/kite-production/connector-magellan
+      tag: "2.0.0"
 
-  # Authentication method
   auth:
     type: api_key
-    description: "Venus API key for authentication"
+    description: "Venus API key for authentication (injected as VENUS_API_KEY env var)."
 
-  # Capabilities this connector supports
   capabilities:
     supports_threads: true
     supports_reactions: false
@@ -50,121 +74,87 @@ spec:
     supports_images: false
     max_message_length: 10000
 
-  # Configuration parameters required to create an instance
+  # Per-instance configuration. Keys are converted to UPPER_SNAKE_CASE
+  # env vars by connector-manager and injected into each on-demand
+  # container invocation.
   config:
-    - name: venus_url
+    - name: VENUS_URL
       display: "Venus URL"
       type: text
       required: true
       default: "http://venus:8090"
-      description: "Base URL of the Venus messaging service"
-
-    - name: api_key
-      display: "API Key"
+      description: "Base URL of the Venus messaging service."
+    - name: VENUS_API_KEY
+      display: "Venus API Key"
       type: secret
       required: true
-      default: "venus-test-key-2026"
-      description: "Authentication key for Venus API access"
+      description: "Bearer token used for the Authorization header."
 
-    - name: webhook_port
-      display: "Webhook Port"
-      type: text
-      required: false
-      default: "8091"
-      description: "Port for receiving webhook callbacks from Venus"
-
-  # Tools available when this connector is active
   tools:
     - name: venus-send-message
       method: POST
-      description: "Send a message to a Venus channel"
+      description: Send a message to a Venus channel.
       args:
-        - name: channel_id
-          type: string
-          description: "Target channel ID (e.g. 'general')"
-          required: true
-        - name: text
-          type: string
-          description: "Message content (markdown supported)"
-          required: true
-        - name: thread_id
-          type: string
-          description: "Thread ID for threaded replies"
-          required: false
-        - name: reply_to_id
-          type: string
-          description: "Message ID being replied to"
-          required: false
-
+        - { name: channel_id, type: string, description: "Target channel ID.", required: true }
+        - { name: text,       type: string, description: "Message text.", required: true }
+        - { name: thread_id,  type: string, description: "Optional thread ID.", required: false }
+        - { name: reply_to_id, type: string, description: "Optional ID of the message being replied to.", required: false }
+      returns:
+        type: object
+        description: The created message record.
     - name: venus-list-messages
       method: GET
-      description: "List messages in a Venus channel"
+      description: List recent messages in a Venus channel.
       args:
-        - name: channel_id
-          type: string
-          description: "Channel ID to list messages from"
-          required: true
-        - name: since
-          type: string
-          description: "RFC3339 timestamp — only return messages after this time"
-          required: false
-
+        - { name: channel_id, type: string, description: "Channel to list.", required: true }
+        - { name: since,      type: string, description: "ISO-8601 timestamp cutoff.", required: false }
+      returns:
+        type: array
+        description: Messages newer than `since`.
     - name: venus-create-channel
       method: POST
-      description: "Create a new Venus channel"
+      description: Create a new Venus channel.
       args:
-        - name: name
-          type: string
-          description: "Channel name (used as ID)"
-          required: true
-        - name: description
-          type: string
-          description: "Channel description"
-          required: false
-
+        - { name: name,        type: string, description: "Channel name.", required: true }
+        - { name: description, type: string, description: "Channel description.", required: false }
+      returns:
+        type: object
+        description: The created channel record.
     - name: venus-list-channels
       method: GET
-      description: "List all Venus channels"
+      description: List all Venus channels.
       args: []
-
+      returns:
+        type: array
+        description: All channels.
     - name: venus-register-webhook
       method: POST
-      description: "Register a webhook URL for real-time message delivery"
+      description: >
+        Register a webhook URL with Venus. Usually called by the
+        venus-bridge service at Spark startup — agents don't normally
+        need to invoke this directly.
       args:
-        - name: url
-          type: string
-          description: "Webhook endpoint URL"
-          required: true
-
+        - { name: url, type: string, description: "Webhook endpoint.", required: true }
+      returns:
+        type: object
+        description: The webhook registration record.
     - name: venus-get-status
       method: GET
-      description: "Get Venus service status and statistics"
+      description: Return Venus service health and version info.
       args: []
+      returns:
+        type: object
+        description: Status record.
 
-  # Version history
   versions:
+    - version: "2.0.0"
+      changelog: |
+        Rewrite as on-demand tool-only connector. Webhook/NATS
+        inbound ingestion moved to the venus-bridge service in the
+        Spark repo. This image now exposes only the tool handlers —
+        one fresh container per tool call, stateless, stdlib-only
+        Go binary.
     - version: "1.0.0"
-      date: "2026-04-04"
-      changes:
-        - "Initial release"
-        - "Channel and message management"
-        - "Webhook delivery for connector integration"
-        - "WebSocket real-time streams"
-        - "API key authentication"
-        - "In-memory storage (no database required)"
-
-  # Setup instructions
-  setup: |
-    Venus is a built-in test service — no external accounts needed.
-
-    1. Venus auto-starts with Docker Compose
-    2. Default API key: venus-test-key-2026 (set VENUS_API_KEY to customize)
-    3. Default channel: #general (auto-created on startup)
-    4. Connector Magellan auto-registers with control-plane
-    5. Test with: curl -H "Authorization: Bearer venus-test-key-2026" \
-         http://venus:8090/api/channels/general/messages
-
-    Environment Variables:
-      VENUS_URL         - Venus service URL (default: http://venus:8090)
-      VENUS_API_KEY     - Authentication key (default: venus-test-key-2026)
-      VENUS_WEBHOOK_PORT - Webhook listener port (default: 8091)
+      changelog: |
+        Legacy always-on connector with bundled webhook listener
+        and NATS publisher. Superseded by 2.0.0.

@@ -1,74 +1,86 @@
-// Package venus provides an HTTP client for the Venus messaging service.
+// Package venus is a minimal HTTP client for the Venus test
+// messaging service, used by the on-demand magellan connector.
+//
+// Every tool call spawns a fresh container, calls one of these
+// methods, writes JSON to stdout, and exits. No connection pooling,
+// no persistent state — each invocation pays one TCP handshake to
+// Venus, which runs on the same Docker network.
 package venus
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
-// Message matches the Venus message JSON format.
-type Message struct {
-	ID         string    `json:"id"`
-	ChannelID  string    `json:"channel_id"`
-	SenderID   string    `json:"sender_id"`
-	SenderName string    `json:"sender_name"`
-	Text       string    `json:"text"`
-	ThreadID   string    `json:"thread_id,omitempty"`
-	ReplyToID  string    `json:"reply_to_id,omitempty"`
-	CreatedAt  time.Time `json:"created_at"`
-}
-
-// Webhook matches the Venus webhook JSON format.
-type Webhook struct {
-	ID  string `json:"id"`
-	URL string `json:"url"`
-}
-
-// Client communicates with the Venus HTTP API.
+// Client wraps the Venus HTTP API.
 type Client struct {
 	baseURL string
 	apiKey  string
-	http    *http.Client
+	httpc   *http.Client
 }
 
-// NewClient creates a Venus API client with API key authentication.
-func NewClient(baseURL, apiKey string) *Client {
+// New returns a Client pointed at the given Venus base URL
+// (e.g. http://venus:8090) with Bearer-auth using apiKey.
+func New(baseURL, apiKey string) *Client {
 	return &Client{
-		baseURL: baseURL,
+		baseURL: strings.TrimRight(baseURL, "/"),
 		apiKey:  apiKey,
-		http: &http.Client{
-			Timeout: 10 * time.Second,
-		},
+		httpc:   &http.Client{Timeout: 10 * time.Second},
 	}
 }
 
-// doRequest creates an HTTP request with the API key header.
-func (c *Client) doRequest(method, url string, body []byte) (*http.Response, error) {
+// do performs the HTTP request with standard headers. body may be nil.
+func (c *Client) do(method, path string, body []byte) ([]byte, error) {
 	var req *http.Request
 	var err error
+	url := c.baseURL + path
 	if body != nil {
 		req, err = http.NewRequest(method, url, bytes.NewReader(body))
 	} else {
 		req, err = http.NewRequest(method, url, nil)
 	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("build request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 	if c.apiKey != "" {
 		req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	}
-	return c.http.Do(req)
+	resp, err := c.httpc.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("venus http: %w", err)
+	}
+	defer resp.Body.Close()
+	raw, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		snippet := string(raw)
+		if len(snippet) > 300 {
+			snippet = snippet[:300] + "…"
+		}
+		return nil, fmt.Errorf("venus http %d: %s", resp.StatusCode, snippet)
+	}
+	return raw, nil
 }
 
-// SendMessage posts a message to a Venus channel.
-func (c *Client) SendMessage(channelID, senderID, senderName, text, threadID, replyToID string) (*Message, error) {
+// ── Tool-implementing methods ────────────────────────────────────────
+
+// SendMessage posts to /api/channels/{channel_id}/messages.
+func (c *Client) SendMessage(channelID, text, threadID, replyToID string) ([]byte, error) {
 	body := map[string]string{
-		"sender_id":   senderID,
-		"sender_name": senderName,
+		// Sender identity is set here rather than in the args
+		// because the agent's "magellan" identity is what should
+		// appear in the channel, not whatever the LLM wrote.
+		"sender_id":   "magellan",
+		"sender_name": "Spark Agent",
 		"text":        text,
 	}
 	if threadID != "" {
@@ -77,54 +89,42 @@ func (c *Client) SendMessage(channelID, senderID, senderName, text, threadID, re
 	if replyToID != "" {
 		body["reply_to_id"] = replyToID
 	}
-
 	data, _ := json.Marshal(body)
-	resp, err := c.doRequest("POST", fmt.Sprintf("%s/api/channels/%s/messages", c.baseURL, channelID), data)
-	if err != nil {
-		return nil, fmt.Errorf("venus send: %w", err)
-	}
-	defer resp.Body.Close()
+	return c.do("POST", fmt.Sprintf("/api/channels/%s/messages", channelID), data)
+}
 
-	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("venus send: status %d", resp.StatusCode)
+// ListMessages returns messages in a channel, optionally since a
+// specified ISO-8601 cursor.
+func (c *Client) ListMessages(channelID, since string) ([]byte, error) {
+	path := fmt.Sprintf("/api/channels/%s/messages", channelID)
+	if since != "" {
+		path += "?since=" + since
 	}
+	return c.do("GET", path, nil)
+}
 
-	var msg Message
-	if err := json.NewDecoder(resp.Body).Decode(&msg); err != nil {
-		return nil, fmt.Errorf("venus send: decode: %w", err)
+// CreateChannel creates a new channel.
+func (c *Client) CreateChannel(name, description string) ([]byte, error) {
+	body := map[string]string{"name": name}
+	if description != "" {
+		body["description"] = description
 	}
-	return &msg, nil
+	data, _ := json.Marshal(body)
+	return c.do("POST", "/api/channels", data)
+}
+
+// ListChannels returns all Venus channels.
+func (c *Client) ListChannels() ([]byte, error) {
+	return c.do("GET", "/api/channels", nil)
 }
 
 // RegisterWebhook registers a webhook URL with Venus.
-func (c *Client) RegisterWebhook(webhookURL string) (*Webhook, error) {
-	data, _ := json.Marshal(map[string]string{"url": webhookURL})
-	resp, err := c.doRequest("POST", fmt.Sprintf("%s/api/webhooks", c.baseURL), data)
-	if err != nil {
-		return nil, fmt.Errorf("venus webhook: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("venus webhook: status %d", resp.StatusCode)
-	}
-
-	var wh Webhook
-	if err := json.NewDecoder(resp.Body).Decode(&wh); err != nil {
-		return nil, fmt.Errorf("venus webhook: decode: %w", err)
-	}
-	return &wh, nil
+func (c *Client) RegisterWebhook(url string) ([]byte, error) {
+	data, _ := json.Marshal(map[string]string{"url": url})
+	return c.do("POST", "/api/webhooks", data)
 }
 
-// Health checks if Venus is reachable (health endpoint is auth-exempt).
-func (c *Client) Health() error {
-	resp, err := c.http.Get(fmt.Sprintf("%s/health", c.baseURL))
-	if err != nil {
-		return fmt.Errorf("venus health: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("venus health: status %d", resp.StatusCode)
-	}
-	return nil
+// GetStatus returns Venus service status.
+func (c *Client) GetStatus() ([]byte, error) {
+	return c.do("GET", "/api/status", nil)
 }
