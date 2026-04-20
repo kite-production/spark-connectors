@@ -91,3 +91,22 @@ jobs:
             ghcr.io/kite-production/connector-${{ matrix.connector }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # Make the package public. GHCR defaults newly-published
+      # container packages to `private` regardless of the source
+      # repo's visibility — surprising for a marketplace repo like
+      # this one. We flip to `public` via the REST API so operators
+      # can `docker pull` without needing GHCR credentials.
+      #
+      # Pass `matrix.connector` through the env block (rather than
+      # ${{ }} interpolated directly into the shell) to avoid the
+      # classic GitHub Actions command-injection pattern if a
+      # malicious directory name ever lands in `connectors/`.
+      - name: Make package public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONNECTOR: ${{ matrix.connector }}
+        run: |
+          gh api -X PATCH \
+            "/orgs/kite-production/packages/container/connector-$CONNECTOR" \
+            -f visibility=public || echo "visibility change skipped (may already be public or package too fresh)"
