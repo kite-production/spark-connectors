@@ -1,0 +1,137 @@
+# Spark Connector Spec — Hubble (Web Search + Fetch)
+# Named after the Hubble Space Telescope — "looks out" across the web
+# on behalf of Spark agents. Continues the space-explorer theme
+# alongside Magellan (Venus bridge) and Venus (test messaging).
+#
+# Architecture: Hubble is a thin CLI tool run as an on-demand
+# container. Each tool call spawns a fresh container, runs the tool,
+# writes JSON to stdout, and exits. No HTTP server, no long-running
+# state — connector-manager collects the stdout as the tool result.
+#
+# For `web-search`, hubble internally calls the SearXNG metasearch
+# backend running as a Spark platform service (docker-compose
+# sidecar, not part of this connector image).
+apiVersion: spark.dev/v1
+kind: Connector
+
+# ── METADATA ────────────────────────────────────────────────────────
+metadata:
+  id: hubble
+  name: "Hubble (Web Search + Fetch)"
+  type: search
+  version: "1.0.0"
+  source: spark
+  publisher: "Spark"
+  maintainers:
+    - name: "Spark Team"
+      email: "spark@kite.ai"
+  category: "Search"
+  tags: ["Search", "Web", "Fetch", "Built-in"]
+  icon: travel_explore
+  iconColor: "#00f5ff"
+  description: >
+    Self-hosted web search and URL fetch. Aggregates search results
+    from Google, Bing, DuckDuckGo and Wikipedia via a local SearXNG
+    backend — no per-query API keys required.
+  longDescription: >
+    Hubble gives Spark agents access to the live web without leaking
+    queries to third-party search APIs. The `web-search` tool routes
+    through a self-hosted SearXNG metasearch backend that aggregates
+    results from 20+ upstream engines. The `web-fetch` tool retrieves
+    a URL's text content with HTML stripped and length-capped, ideal
+    for reading docs, following a search result, or inspecting an API
+    endpoint.
+
+    Hubble runs as an on-demand container: a fresh Docker container
+    is spawned for each tool call, executes the request, returns
+    results as JSON on stdout, and exits. The SearXNG backend is a
+    separate Spark platform service (not part of this connector
+    image) — hubble just points at its URL.
+  license: MIT
+  homepage: https://github.com/kite-production/spark
+  repository: https://github.com/kite-production/spark-connectors
+
+# ── SPEC ────────────────────────────────────────────────────────────
+spec:
+  runtime:
+    type: docker
+    language: go
+    execution_mode: on_demand
+    docker:
+      image: ghcr.io/kite-production/connector-hubble
+      tag: "1.0.0"
+
+  # No authentication — SearXNG is unauthenticated on the internal
+  # network, and web-fetch hits public URLs with a sane User-Agent.
+  auth:
+    type: none
+
+  # Capabilities empty because hubble is a tool-only connector — it
+  # never produces chat messages or channel events.
+  capabilities: {}
+
+  # Per-instance configuration. SEARXNG_URL points at the platform-
+  # provided SearXNG sidecar on the Spark network. This is passed to
+  # the on-demand container as an environment variable.
+  config:
+    - name: SEARXNG_URL
+      display: "SearXNG Backend URL"
+      type: text
+      required: true
+      default: "http://searxng:8080"
+      description: >
+        Base URL of the SearXNG metasearch instance. For standard
+        Spark deployments use the default (points at the platform
+        searxng sidecar). Can be overridden to point at an external
+        SearXNG instance if desired.
+
+  # Tools exposed to agents. Names are scoped as `hubble/<tool>`,
+  # which Spark renames to `hubble__<tool>` for Anthropic API
+  # compatibility (no `/` allowed in tool names).
+  tools:
+    - name: web-search
+      method: POST
+      description: >
+        Search the web for a query. Aggregates results from Google,
+        Bing, DuckDuckGo, Wikipedia and others via SearXNG. Returns
+        a list of hits, each with title, URL, and snippet.
+      args:
+        - name: query
+          type: string
+          description: "The search query."
+          required: true
+        - name: max_results
+          type: integer
+          description: "Maximum number of results to return (default 5)."
+          required: false
+      returns:
+        type: object
+        description: "Object with query, count, and results[] of {title, url, snippet}."
+
+    - name: web-fetch
+      method: POST
+      description: >
+        Fetch a URL and return its cleaned text content. Strips HTML
+        tags and caps output length. Useful for reading documentation,
+        APIs, or following a search result.
+      args:
+        - name: url
+          type: string
+          description: "URL to fetch (http:// or https://)."
+          required: true
+        - name: max_length
+          type: integer
+          description: "Maximum characters to return (default 8000)."
+          required: false
+      returns:
+        type: object
+        description: "Object with url, content (cleaned text), and length."
+
+  # Version history for the marketplace UI.
+  versions:
+    - version: "1.0.0"
+      changelog: |
+        Initial release. Tool-only on-demand connector wrapping a
+        self-hosted SearXNG backend. Adopts the standardized
+        `execute <tool> <method> <args-json>` CLI contract so
+        connector-manager can dispatch tools via ephemeral containers.
